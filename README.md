@@ -1,7 +1,7 @@
 # WinEDB
 Windows.EDB Browser
 
-==> [Latest version](https://github.com/kacos2000/Jumplist-Browser/releases/latest) <==
+==> [Latest version](https://github.com/kacos2000/WinEDB/releases/latest) <==
 
    ![image](https://user-images.githubusercontent.com/11378310/207181709-229a4975-e492-4e9d-8ebe-8411144cad4c.png)
 
