@@ -3,7 +3,7 @@ Windows.EDB Browser
 
 ==> [Latest version](https://github.com/kacos2000/WinEDB/releases/latest) <==
 
-   ![image](https://user-images.githubusercontent.com/11378310/207181709-229a4975-e492-4e9d-8ebe-8411144cad4c.png)
+   ![image](https://user-images.githubusercontent.com/11378310/207680831-cc3b3a37-0405-4833-894c-9087c607f8d1.png)
 
 
 Dependencies: 
