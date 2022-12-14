@@ -7,14 +7,7 @@
 
 
 
-#region Source: Startup.pss
-#----------------------------------------------
-#region Import Assemblies
-#----------------------------------------------
-#endregion Import Assemblies
 
-#Define a Param block to use custom parameters in the project
-#Param ($CustomParameter)
 
 function Main {
 <#
@@ -48,13 +41,6 @@ function Main {
 }
 
 
-#endregion Source: Startup.pss
-
-#region Source: Globals.ps1
-	
-	
-	
-#endregion Source: Globals.ps1
 
 #region Source: MainForm.psf
 function Show-MainForm_psf
@@ -202,7 +188,6 @@ function Show-MainForm_psf
 	# SHA256: 861316CCA730046625E985845427C778B254A40303FD378ABB2A4BFFFD26074A
 	try
 	{
-		# Could also use: $null = [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Isam.Esent.Interop")
 		$null = [Reflection.Assembly]::GetAssembly([Microsoft.Isam.Esent.Interop.Api])
 		$Status.Text = "[Microsoft.Isam.Esent.Interop.Api] exists."
 	}
@@ -1550,7 +1535,7 @@ fwba/X8=
 				}
 				
 				# Stop the loop becoming endless
-				if ($i -eq 5 -or $redirs.Count -eq 0 -or $script:previous -eq $redirs.Count)
+				if ($i -eq 10 -or $redirs.Count -eq 0 -or $script:previous -eq $redirs.Count)
 				{
 					foreach ($xdir in $redirs)
 					{
@@ -4819,8 +4804,8 @@ Main ($CommandLine)
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBrVB7VeY4ypQRz
-# 4xFGd8UfUZegjsrCDMkQcfXLoiCEEqCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBQbwaFsphrVVAP
+# xdj0bzb4t4SbSXOePTzZstwshG9txqCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -5040,35 +5025,35 @@ Main ($CommandLine)
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIEYPZBieSXCHXGUm1QHG6L+t/4KZx6Ro
-# yMdXfLC1fzuwMA0GCSqGSIb3DQEBAQUABIICAE3usb5k3Uq/wfBAkGv1dd9Rs13p
-# g73HNIDMaV/khgRfwfvWGFdE+iE+ktCRD9yzXBMTsLRhgAGzK6hMamtGkWWK0N51
-# LTerNu3raZ75OPiCBU86eBVWrQhgwZXowetU9Au0Yu4LlSYnOACQMOoB1yiMI0Wx
-# jaYZiV3EkPAytevpyju35nlysOHxtoCkGRU29YClTniap8O7RIqszIjnmwrDQS4T
-# P6Omw7um98PYTi5CoYt71UOLA/voDG/fECo97ZZImNzRhGOR2w1U2iAekhuEsyfA
-# orjyErkVp6+15zGwgKTh6uZC1IpbmlNcjaFKbC4CwpLk4yzMIc/Ez5QYSVYTBVns
-# mXgt8V+0KHuWsR6U9Y2ob9Wm0axLTik1kd4qjg0xZuk0hX9FTykxxcDxWBQNPtJy
-# LU8j4Ys5Vsp/Dyb2fChfZ2EMrVPQXHUZZsqbjK5ksSXuqSytxqOu2zObGyI0FxU+
-# rt4UTBlKv9b9nZNfUdsFK2EtvoJqIHT6iOTJOtb9uAxDoOBdzNg5Bxk+/qsW7amj
-# aM6hUzeib4IQylhF0E/B9w+KTTft2nc4xOw//7N5WRT2qFZT/o+TT3QN9idfdhBf
-# RANPM7wrlYR9aXGtix/bsWhIYJgnOB9Ilexx9ARPZ/3J/OXU+P84Vs8Ffgx8uDev
-# S/trvycBd835wJD1oYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEICukgNb3PKa3PCfhKZuJdPeVBcXIato/
+# xGzjl/DLqt+OMA0GCSqGSIb3DQEBAQUABIICAGuCgCM1Vbt8qHxQtVZLR+wCgE6N
+# MjgZ9+9HVPMdinsA1rFraS7KZ9M3rTIrjVbNhnwLi6VE1GqKzjCK6YNqrhRc8OCT
+# OBoHgFhCQYQ4FkaE7PcsL8SWBs4oUWe45l6c/Vsg08RAlEBSN+XqSXz6iuxnEtpi
+# TLfp9z7ankUXV8GflHXcoGEdq+TQ4Jkw3TSWh2KmFXv1j3KiPX3E7zudUluVr38M
+# JdzABtEFgif4wwnA806mSTLjKG9jbxab/k9DxIIs7ds84stX3GoRYJHjX2OVYLfA
+# pe/aLb2aGvMy8j+LImNApooJnXxwWTuq90QYUs1sc+aPcDv9Tp7hSrWO8tN7xez1
+# IHmRf/DTwCm0vejNgq09m3BArGGBRf6kPGBBe0ARl81NivwT/ZzgqVKZcE31/eKJ
+# wijTqZxyU/8r4NCvQPGuhNlnOJ8owdYd658tUI0VldYWX857Huen52tN47DLZCDq
+# fkZstd/2avWR88z6O2+D5CMZsZFyr9Z6GhQ4RYHzMT7bb/nWu5kmu7AsM/QWIrdf
+# OIj4Kpr9gehFlIYmCxP/BP+qMS3Mf/7biP7VBOo+Q9prur606wBTzwrxlnV6OE9v
+# YtM0QpS8QJLrybNZCaYIdyRijnBHXQ4fveM3oDoBtq/noVNUXdGWygJ43HtXFCiH
+# GlS5jlcs2GKxlzl9oYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMTQxODU2NDRaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMTQxOTMzNTJaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCA2VsOs9yuxjp3RfLG4Fg2/W64XWR6xeWA+ZMNAntm6iTCBpAYLKoZIhvcNAQkQ
+# BCAFohz1atexqmigEi/pjzK/La+wagbjjD4TkhvwtG3fnjCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgDYS0T/hsU+kxEs5uvsInMF5hpLQ
-# 9Y1oZILekHjAtZ5SixhOYGFm2O+VRH6dl7uC8baP65DBvun59JA9TFz1x2xfkNa2
-# EPuhgpoAuOkvr4h7kqVYQSKC8nimzuzFRFWWgJUdB19Brqtd/jjIAy3JfjkNX/m8
-# kfpEhr/l3/dsVB0EP9Awcb0jkGe3oTq8wYZiFkVnjZX/MDHrYeP35RO++p5jbCFp
-# CIOgRro1jbmeCpLiN/UeYDx7cXaoPjtr0ENM2gI11XZB8bVtk+G350/ZNvCcKuaG
-# H/wejKaXsxVc1i+JCzLKUFn5j5R39+ADH6ll1qU4owZX/N2ChqzskVmy1iiiJFsK
-# 8kEjO3QMKOP/0oPmFAgH1oB0GLiO1V1z1LbbQMH07/xb62RZRz/KTWUQp3mfk0uG
-# G+PYHDCKmCJ13fJh59qLV8APmXSgu1oSnJlIhGuWXPSoD9zuj8UfKzLnoW6efdzQ
-# x/6eyNQEzcp+LCC4mXbaAR2B1TF/8l9cdezgnw==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgJmP224P51cEWf3ZxyHbFVQnS/7D
+# DCGac3r599ybQ3JVaIYRbbwFddU2HXwmeml9UxxaEE03zA36Aba5NvHZpf6oV2pB
+# 46BGi49UAbu7ne4jxSbLHb5AVF+sCDTvh0sRB5JwLQ7osLhD/rwDA2tEMTDOF9TI
+# p9HFN0+vrsJNZL+tRQGhUMHtLsbTrz96yyp+ai6bCg4KReCMrYKxL+leB3Fej3t+
+# wLx+BIuJGDyK2E4W+YcgBzN6EBHfqlZnW1NuvJNkX5i8rigDVbVd2CFbm7pw6nhl
+# mzArQmNhdCQbkHbYGpcqw30/yVsUlTFqB/zPbLAOGmKoKxOadPb5OSemLuGedho7
+# oG+BFnT5nDsE+G4vfy4spmu0NRAzyGfSK4T4XSEm8kCiS8MKZlCpEw5DJLZz442l
+# MnuMz2OggU13S1RLWm37aytVTXIXv59UIUKOK34EIAe8vSr/D4DmVJuMOoxUsL68
+# Nmtb0RLrAJ1tLkFVvLxFeIdqUsElH0GlJVuMKg==
 # SIG # End signature block
