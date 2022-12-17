@@ -7,9 +7,18 @@ Windows.EDB Browser
 
 
    - The stand-alone x64 command line tool [WindowsEDB-to-CSV.exe](https://github.com/kacos2000/WinEDB/raw/master/WindowsEDB-to-CSV.exe) or it's equivalent Powershell script [WindowsEDB-to-CSV.ps1](https://github.com/kacos2000/WinEDB/blob/master/WindowsEDB-to-CSV.ps1) will split the contents of the
-    table "SystemIndex_PropertyStore" table to multiple CSVs as like seen on the image below:
+    "SystemIndex_PropertyStore" table to multiple CSVs as seen on the image below:
          
-     ![image](https://user-images.githubusercontent.com/11378310/208197964-ac6ec1e8-96da-4ba3-bb78-bf82d9b97854.png)
+     ![image](https://user-images.githubusercontent.com/11378310/208239941-3c71634a-91cb-42c1-958a-7622f6826563.png)
+     
+    Some stats:
+    ---------------------------
+    Database size: 2.950.692.864
+    GUI     - Processing finished in: 09:33:33 (H:M:S)
+    PS1/EXE - Processing finished in: 04:39:12 (H:M:S)
+    Previous version of ps1 finished in: 18:25:05 (H:M:S)
+    ---------------------------
+
 
 
 Dependencies: 
