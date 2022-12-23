@@ -10,16 +10,6 @@ Windows.EDB Browser
     "SystemIndex_PropertyStore" table to multiple CSVs as seen on the image below:
          
      ![image](https://user-images.githubusercontent.com/11378310/208239941-3c71634a-91cb-42c1-958a-7622f6826563.png)
-     
-    Some stats:
-    ---------------------------
-    Database size: 2.950.692.864
-    GUI     - Processing finished in: 09:33:33 (H:M:S)
-    PS1/EXE - Processing finished in: 04:39:12 (H:M:S)
-    Previous version of ps1 finished in: 18:25:05 (H:M:S)
-    ---------------------------
-
-
 
 Dependencies: 
 - [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48)
