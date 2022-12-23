@@ -1,10 +1,10 @@
 <#
 	.SYNOPSIS
-		Extracts table data from Wiindows EDB databases
+		Extracts table data from Windows EDB databases
 	
 	.DESCRIPTION
 		Extracts the table data & Table info  from Wiindows EDB databases,
-		provided they were Shutdown properly.
+		provided they were Shutdown properly, or repaired with Esentutl.exe.
 		If not, the script will stop & inform you (hopefully).
 		
 		The 3 embedded Microsoft DLLs (Assemblies) are:
@@ -18,7 +18,7 @@
 	
 	.PARAMETER OutputFolder
 		The Full Path of the Folder to save the extracted data.
-		Default is User's Desktop
+		Default is User's Desktop (a subfolder is created for each processed dB)
 	
 	.PARAMETER AllTables
 		A description of the AllTables parameter.
@@ -27,6 +27,7 @@
 		===========================================================================
 		Created on:   	15/12/2022 4:06 pm
 		Created by:   	Costas Katsavounidis MA, MSc, CFCE, CAWFE, ICMDE
+						https://github.com/kacos2000/WinEDB
 		Filename:       WindowsEDB-to-CSV.ps1
 		===========================================================================
 #>
@@ -119,6 +120,270 @@ function Copy-DB
 	}
 }
 
+# https://learn.microsoft.com/en-us/dotnet/api/system.io.fileattributes?view=net-7.0
+$FileAttributesEnum = [System.Collections.Hashtable]@{
+	"1"	     = "ReadOnly"
+	"2"	     = "Hidden"
+	"4"	     = "System"
+	"16"	 = "Directory"
+	"32"	 = "Archive"
+	"64"	 = "Device"
+	"128"    = "Normal"
+	"256"    = "Temporary"
+	"512"    = "SparseFile"
+	"1024"   = "ReparsePoint"
+	"2048"   = "Compressed"
+	"4096"   = "Offline"
+	"8192"   = "NotContentIndexed"
+	"16384"  = "Encrypted"
+	"32768"  = "IntegrityStream"
+	"131072" = "NoScrubData"
+}
+
+$TablesToKeep = [System.Array]@(
+	'SystemIndex_Gthr'
+	'SystemIndex_GthrPth'
+	'SystemIndex_PropertyStore'
+)
+
+$MSysTypes = [System.Collections.Hashtable]@{
+	'1' = 'Table'
+	'2' = 'Column'
+	'3' = 'Index'
+	'4' = 'Long Value'
+	'5' = 'Call Back'
+}
+
+# ColumnTypes
+# https://learn.microsoft.com/en-us/windows/win32/extensible-storage-engine/jet-coltyp
+$ColumnTypes = [System.Collections.Hashtable]@{
+	
+	'0'  = 'Nil' # An invalid column type
+	'1'  = 'Bit' # A column type that allows three values: True, False, or NULL
+	'2'  = 'Unsigned Byte' # A 1-byte unsigned integer
+	'3'  = 'Short' # A 2-byte signed integer
+	'4'  = 'Long' # A 4-byte signed integer
+	'5'  = 'Currency' # An 8-byte signed integer
+	'6'  = 'IEEE Single' # A single-precision (4-byte) floating point number.
+	'7'  = 'IEEE Double' # A double-precision (8-byte) floating point number
+	'8'  = 'DateTime' # fractional days since the year 1900
+	'9'  = 'Binary' # A fixed or variable length, raw binary column that can be up to 255 bytes long
+	'10' = 'Text' # A fixed or variable length text column that can be up to 255 ASCII characters in length or 127 Unicode characters in length.
+	'11' = 'Long Binary' # A fixed or variable length, raw binary column that can be up to 2147483647 bytes long
+	'12' = 'Long Text' # A fixed or variable length, text column that can be up to 2147483647 ASCII characters or 1073741823 Unicode long
+	'13' = 'SLV' # obsolete
+	'14' = 'UnsignedLong' # A 4-byte unsigned integer (RetrieveColumnAsUInt32))
+	'15' = 'Long Long' # An 8-byte signed integer
+	'16' = 'GUID' # A fixed length 16 byte binary column that natively represents the GUID data type (RetrieveColumnAsGuid)
+	'17' = 'Unsigned Short' # A 2-byte unsigned integer (RetrieveColumnAsUInt16)
+	'18' = 'Max' # A constant describing the maximum (that is, one beyond the largest valid) column type supported by the engine
+}
+
+$dates = @(
+	'DateModified'
+	'DateCreated'
+	'DateAccessed'
+	'DateAcquired'
+	'DateArchived'
+	'DateCompleted'
+	'DateImported'
+	'DatePrinted'
+	'DateSaved'
+	'ItemDate'
+	'DateVisited'
+	'DateEncoded'
+	'DateReceived'
+	'DateSent'
+	'DateTaken'
+	'GatherTime'
+	'DateLastUsed'
+	'StartDate'
+	'EndTime'
+	'LocalEndTime'
+	'LocalStartTime'
+	'StartTime'
+	'ReminderTime'
+	'DateItemExpires'
+	'Anniversary'
+	'Birthday'
+	'DueDate'
+	'EndDate'
+	'GPS_Date'
+	'DateVisited'
+	'DateEncoded'
+	'DateContentExpires'
+	'OriginalBroadcastDate'
+	'RecordingTime'
+	'CreationTime'
+	'ExpireDate'
+	'Modified'
+	'IssueDate'
+	'Expires'
+	'ExpirationTime'
+	'LastChangeTime'
+	'DownloadDateExpire'
+	'DownloadDateExpireOverride'
+)
+
+$unicodeASbinary = @(
+	'LocaleName'
+	'ItemAuthors'
+	'FromName'
+	'FromAddress'
+	'AttachmentNames'
+	'CcAddress'
+	'CcName'
+	'ToAddress'
+	'ToName'
+	'Author'
+	'ItemAuthors'
+	'ItemParticipants'
+	'AppIdList'
+	'DaysActive'
+	'HoursActive'
+	'Importance'
+	'Kind'
+	'DlnaProfileID'
+	'Producer'
+	'Artist'
+	'Genre'
+	'HighKeywords'
+	'LowKeywords'
+	'MediumKeywords'
+)
+
+$timespans = @(
+	'ActivityHistory_ActiveDuration'
+	'Document_TotalEditingTime'
+	'Media_Duration'
+)
+
+$sizes = @(
+	'System_Size'
+	'TransferSize'
+)
+
+function Get-EDBcolumnData
+{
+	param
+	(
+		[Parameter(Mandatory = $true)]
+		$Session,
+		[Parameter(Mandatory = $true)]
+		$Table,
+		[Parameter(Mandatory = $true)]
+		$Column
+	)
+	
+	$szlist = $sizes -join '|'
+	$tlist = $timespans -join '|'
+	$dlist = $dates -join '|'
+	$ulist = $unicodeASbinary -join '|'
+	
+	# Check the Name Column
+	$data = switch ($column.Coltyp.ToString())
+	{
+		'Long' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'17' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'16' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'14' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'Short'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'UnsignedByte'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsByte($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'Bit'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsBoolean($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'DateTime'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'Currency'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'IEEESingle'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsFloat($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'IEEEDouble'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDouble($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'Guid'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'Text'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'LongText'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+		'Binary'{
+			switch ($column.name.ToString())
+			{
+				{ $_ -eq 'LastModified' -and $Column.MaxLength -eq 8 }
+				{
+					try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+					catch [System.Management.Automation.MethodInvocationException] { }
+					catch { [System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None), $null).Replace('-', ''); break }
+				}
+				{ $_ -match $szlist -and $Column.MaxLength -eq 8 }
+				{
+					try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+				}
+				{ $_ -match $dlist -and $Column.MaxLength -eq 8 }
+				{
+					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
+					if ($Binarydata -ne $null)
+					{
+						try { [datetime]::FromFileTimeUtc([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					}
+					else { break }
+				}
+				{ $_ -match $tlist -and $Column.MaxLength -eq 8 }
+				{
+					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
+					if ($Binarydata -ne $null)
+					{
+						try
+						{
+							$dur = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
+							"$([timespan]::FromTicks($dur).ToString('dd\:hh\:mm\:ss')) ($($dur))"
+							break
+						}
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					}
+					else { break }
+				}
+				{ $_ -match 'ActivityHistory_Importance' -and $Column.MaxLength -eq 8 }
+				{
+					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
+					if ($Binarydata -ne $null)
+					{
+						try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
+					}
+					break
+				}
+				default {
+					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
+					if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					else { break }
+				}
+			}
+		}
+		'LongBinary'{
+			switch ($column.name.ToString())
+			{
+				{ $_ -match $ulist }{
+					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
+					if ($Binarydata -ne $null)
+					{
+						try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::Unicode, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
+						break
+					}
+					else { break }
+				}
+				default {
+					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
+					if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					else { break }
+				}
+			}
+		}
+		default {
+			$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
+			if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+			else { $null }
+		}
+	}
+	return $data
+} # End Get-EDBcolumnData
+
+
+
 function Read-EDB
 {
 	param
@@ -178,51 +443,7 @@ function Read-EDB
 		Write-Output -InputObject $Error[0].Exception.GetType().FullName
 	}
 	
-	$dates = @(
-		'DateModified'
-		'DateCreated'
-		'DateAccessed'
-		'DateAcquired'
-		'DateArchived'
-		'DateCompleted'
-		'DateImported'
-		'DatePrinted'
-		'DateSaved'
-		'ItemDate'
-		'DateVisited'
-		'DateEncoded'
-		'DateReceived'
-		'DateSent'
-		'DateTaken'
-		'GatherTime'
-		'DateLastUsed'
-		'StartDate'
-		'EndTime'
-		'LocalEndTime'
-		'LocalStartTime'
-		'StartTime'
-	)
-	
-	# https://learn.microsoft.com/en-us/dotnet/api/system.io.fileattributes?view=net-7.0
-	$FileAttributesEnum = [System.Collections.Hashtable]@{
-		"1"	     = "ReadOnly"
-		"2"	     = "Hidden"
-		"4"	     = "System"
-		"16"	 = "Directory"
-		"32"	 = "Archive"
-		"64"	 = "Device"
-		"128"    = "Normal"
-		"256"    = "Temporary"
-		"512"    = "SparseFile"
-		"1024"   = "ReparsePoint"
-		"2048"   = "Compressed"
-		"4096"   = "Offline"
-		"8192"   = "NotContentIndexed"
-		"16384"  = "Encrypted"
-		"32768"  = "IntegrityStream"
-		"131072" = "NoScrubData"
-	}
-	
+
 	# Get the Page Size
 	[System.Int32]$PageSize = -1
 	[Microsoft.Isam.Esent.Interop.Api]::JetGetDatabaseFileInfo($dbfile, [ref]$PageSize, [Microsoft.Isam.Esent.Interop.JET_DbInfo]::PageSize)
@@ -352,7 +573,11 @@ function Read-EDB
 	# Get All Table Names
 	try
 	{
-		$TableNames = [Microsoft.Isam.Esent.Interop.Api]::GetTableNames($Session, $DatabaseId)
+		$TableNames = [System.Collections.ArrayList]@([Microsoft.Isam.Esent.Interop.Api]::GetTableNames($Session, $DatabaseId))
+		$TableNames.Insert(0, 'MSysObjects') # Manually Insert the System ones (hidden from the Interop API)
+		$TableNames.Insert(1, 'MSysObjectsShadow')
+		$TableNames.Insert(2, 'MSysObjids')
+		$TableNames.Insert(3, 'MSysLocales')
 	}
 	catch
 	{
@@ -401,9 +626,6 @@ function Read-EDB
 			Write-Output "Skipping $($TableName) - Table is empty"
 			continue # skip table
 		}
-		try { [Microsoft.Isam.Esent.Interop.Api]::JetComputeStats($Session, $Table) }
-		catch [System.Management.Automation.RuntimeException]
-		{ <#No Harm Done #> }
 			
 		$Columns = [Microsoft.Isam.Esent.Interop.Api]::GetTableColumns($Session, $DatabaseId, $TableName)
 		$ColumnArray = [System.Collections.ArrayList]@()
@@ -420,14 +642,153 @@ function Read-EDB
 		$TableName | Out-File -FilePath "$($outfolder)\$($dbfilename)_$($TableName).txt" -Encoding utf8
 		"Record Count: $($RecCount)" | Out-File -FilePath "$($outfolder)\$($dbfilename)_$($TableName).txt" -Encoding utf8 -Append
 		$ColumnArray | foreach-object { $_ } | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName)_Columns.csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation
-		# [Microsoft.Isam.Esent.Interop.Api]::GetColumnDictionary($Session, $Table)
-		Out-File -FilePath "$($outfolder)\$($dbfilename)_$($TableName).txt" -Encoding utf8 -Append
 		
-		# Read Table
 		Write-Output "Reading Table: '$($TableName)' with $($columnCount) Columns and $($RecCount) Records"
-		
+		$r = 0
 		###################################################
-		if ($TableName -eq 'SystemIndex_PropertyStore') # :)
+		if ($TableName -in ('MSysObjects', 'MSysObjectsShadow'))
+		{
+			# Try to go to the 1st record
+			$null = [Microsoft.Isam.Esent.Interop.Api]::MoveBeforeFirst($Session, $Table)
+			# Create Pairs
+			$pairs = [System.Collections.ArrayList]@()
+			$RowRecords = [System.Collections.ArrayList]@()
+			# Get Row Records
+			While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
+			{
+				# Get the Row Data
+				$RowRecordData = [PSCustomObject]@{ }
+				foreach ($column in $ColumnArray)
+				{
+					if (![Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)) { continue }
+					$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
+					
+					# Add column data to psobject
+					if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
+					{
+						$RowRecordData | Add-Member -MemberType NoteProperty -Name "$($column.Name)" -Value $data
+					}
+					
+				} # end for each column
+				$null = $RowRecords.Add($RowRecordData)
+				
+								
+				if (!!$ColumnTypes[[System.String]$RowRecordData.ColtypOrPgnoFDP]) { $RowRecordData.ColtypOrPgnoFDP = "$($ColumnTypes[[System.String]$RowRecordData.ColtypOrPgnoFDP]) ($($RowRecordData.ColtypOrPgnoFDP))" }
+				if (!!$MSysTypes[[System.String]$RowRecordData.Type]) { $RowRecordData.Type = "$($MSysTypes[[System.String]$RowRecordData.Type]) ($($RowRecordData.Type))" }
+				if ($r % 50 -eq 0)
+				{
+					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName)" -PercentComplete "$(($r/$RecCount).tostring('P0').trim('%'))"
+				}
+				$r++
+			} # End While
+			# Sort in order to get All the fields
+			$outdata = $RowRecords | Sort-Object -Property @{ expression = { $_.psobject.properties.count } } -Descending
+			# Export to CSV
+			$outdata | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
+			Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($key)" -Completed
+			$RowRecords.Clear()
+			$outdata = $null
+			[System.GC]::Collect()
+		}
+		elseif ($TableName -eq 'MSysObjids')
+		{
+			# Try to go to the 1st record
+			$null = [Microsoft.Isam.Esent.Interop.Api]::MoveBeforeFirst($Session, $Table)
+			
+			# Get Row Records
+			While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
+			{
+				# Get the Row Data
+				$RowRecordData = [PSCustomObject]@{ }
+				foreach ($column in $ColumnArray)
+				{
+					$data = switch ($column.Coltyp)
+					{
+						'Long' {
+							[Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
+							break
+						}
+						'Short' {
+							[Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
+							break
+						}
+						default {
+							Get-EDBcolumnData -Session $Session -Table $Table -Column $column
+						}
+					}
+					
+					# Add column data to psobject
+					if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
+					{
+						$RowRecordData | Add-Member -MemberType NoteProperty -Name "$($column.Name)" -Value $data
+					}
+					
+				} # end for each column
+				if (!!$MSysTypes[[System.String]$RowRecordData.Type]) { $RowRecordData.Type = "$($MSysTypes[[System.String]$RowRecordData.Type]) ($($RowRecordData.Type))" }
+				# Export Rows
+				$RowRecordData | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
+				if ($r % 50 -eq 0)
+				{
+					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName)" -PercentComplete "$(($r/$RecCount).tostring('P0').trim('%'))"
+				}
+				$r++
+			} # End While there are rows
+			Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($key)" -Completed
+		}
+		elseif ($TableName -eq 'MSysLocales')
+		{
+			# Try to go to the 1st record
+			$null = [Microsoft.Isam.Esent.Interop.Api]::MoveBeforeFirst($Session, $Table)
+			
+			# Get Row Records
+			While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
+			{
+				
+				# Get the Row Data
+				$RowRecordData = [PSCustomObject]@{ }
+				foreach ($column in $ColumnArray)
+				{
+					$data = switch ($column.Coltyp)
+					{
+						'Long' {
+							[Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
+							break
+						}
+						'Binary' {
+							$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
+							if ($Binarydata -ne $null)
+							{
+								try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::Unicode, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
+								catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
+								break
+							}
+						}
+						'UnsignedByte' {
+							[Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsByte($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
+							break
+						}
+						default {
+							Get-EDBcolumnData -Session $Session -Table $Table -Column $column
+						}
+					}
+					
+					# Add column data to psobject
+					if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
+					{
+						$RowRecordData | Add-Member -MemberType NoteProperty -Name "$($column.Name)" -Value $data
+					}
+					
+				} # end for each column
+				$RowRecordData | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
+				if ($r % 50 -eq 0)
+				{
+					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName)" -PercentComplete "$(($r/$RecCount).tostring('P0').trim('%'))"
+				}
+				$r++
+			} # End While there are rows
+			Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($key)" -Completed
+		}
+		elseif ($TableName -eq 'SystemIndex_PropertyStore') # :)
 		{
 			# Get Pairs of Index (WorkID) and 'System_Message_Store Names' Unique Name
 			# As each one uses different fields 
@@ -451,8 +812,8 @@ function Read-EDB
 			} # End While
 			
 			# Create HashTable
-			$Types = ($pairs | sort -Property Type -Unique).Type
-			$HashTable = [System.Collections.Hashtable]@{ }
+			$Types = ($pairs | sort -Property 'Type' -Unique).Type
+			$HashTable = [System.Collections.HashTable]@{}
 			
 			# Get each Type on its own
 			Foreach ($type in $types){$Hashtable[$type] = @($pairs.Where{ $_.type -eq $type }.WorkID) 	} # End foreach Type
@@ -460,8 +821,9 @@ function Read-EDB
 			# Colect the Data for each type
 			foreach ($key in $HashTable.keys)
 			{
-				Write-Output "Reading Table: '$($TableName)' - Collecting 'System_Search_Store' Entries of type: '$($key)'"
-				
+				Write-Output "Reading Table: '$($TableName)' - Collecting $($HashTable[$key].count) 'System_Search_Store' Entries of type: '$($key)'"
+				$RowRecords = [System.Collections.ArrayList]@()
+				$r = 0
 				foreach ($value in $HashTable[$key])
 				{
 					[System.Byte[]]$v = [System.BitConverter]::GetBytes($value)
@@ -473,41 +835,7 @@ function Read-EDB
 					$columndata = [PSCustomObject]@{ }
 					foreach ($column in $ColumnArray)
 					{
-						$data = if ($column.Coltyp.ToString() -eq 'Binary' -and $column.name.ToString() -match ($dates -join '|'))
-						{
-							$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
-							if ($Binarydata -ne $null)
-							{
-								try { [datetime]::FromFileTimeUtc([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)).ToString("dd/MM/yyyy HH:mm:ss.fffffff") }
-								catch { [System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', '') }
-							}
-						}
-						elseif ($column.name.ToString() -eq 'LastModified')
-						{
-							try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff") }
-							catch [System.Management.Automation.MethodInvocationException] { }
-							catch { [System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', '') }
-						}
-						elseif ($column.name.ToString() -in ('Parent', 'ScopeID')) { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'UnsignedByte') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsByte($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'Bit') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsBoolean($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq '17') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq '16') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq '14') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'Short') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'Long') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'DateTime') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'Currency') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'IEEESingle') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsFloat($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'IEEEDouble') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDouble($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'Guid') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'Text') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -eq 'LongText') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-						elseif ($column.Coltyp.ToString() -in ('Binary', 'LongBinary'))
-						{
-							$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
-							if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
-						}
+						$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 						
 						# Convert FileAttributes from Int to human readable string
 						if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
@@ -515,58 +843,43 @@ function Read-EDB
 						# Add column data to psobject
 						if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
 						{
-							$columndata | Add-Member -MemberType NoteProperty -Name "$($column.Name)" -Value $data
+							$columndata | Add-Member -MemberType NoteProperty -Name "$($column.Name)" -Value $data -Force 
 						}
+						
 					} # end for each column
-										
-					$columndata <#| Where-Object { ($_.PSObject.Properties | ForEach-Object { $_.Value }) -ne $null } #>| Export-Csv -Path "$($outfolder)\$($dbfilename)__$($key)__$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
-				}
-			} # end foreach key
 
+					if ($r % 50 -eq 0)
+					{
+						$p = ($r/$HashTable[$key].count).tostring('P0').trim('%')
+						Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($key)" -PercentComplete "$($p)"
+					}
+					$r++
+					$null = $RowRecords.Add($columndata)
+				} #end rows
+				$rpath = "$($outfolder)\$($dbfilename)_$($TableName)_$($type)_Records.csv"
+				# Sort in order to get All the fields
+				$outdata = $RowRecords | Sort-Object -Property @{ expression = { $_.psobject.properties.count } } -Descending
+				# Export to CSV
+				$outdata | Export-Csv -Path "$($outfolder)\$($dbfilename)__$($TableName)_$($key).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
+			} # end foreach key
+			Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($key)" -Completed
+			$pairs.Clear()
+			$HashTable.Clear()
+			$RowRecords.Clear()
+			$outdata = $null
+			[System.GC]::Collect()
 		}
 		else # Get Other Tables
 		{
 			# Get Row Records
-			while ($true)
+			# Try to go to the 1st record
+			$null = [Microsoft.Isam.Esent.Interop.Api]::MoveBeforeFirst($Session, $Table)
+			While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
 			{
 				$columndata = [PSCustomObject]@{ }
 				foreach ($column in $ColumnArray)
 				{
-					$data = if ($column.Coltyp.ToString() -eq 'Binary' -and $column.name.ToString() -match ($dates -join '|'))
-					{
-						$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
-						if ($Binarydata -ne $null)
-						{
-							try { [datetime]::FromFileTimeUtc([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)).ToString("dd/MM/yyyy HH:mm:ss.fffffff") }
-							catch { [System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', '') }
-						}
-					}
-					elseif ($column.name.ToString() -eq 'LastModified')
-					{
-						try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff") }
-						catch [System.Management.Automation.MethodInvocationException] { }
-						catch { [System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', '') }
-					}
-					elseif ($column.name.ToString() -in ('Parent', 'ScopeID')) { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'UnsignedByte') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsByte($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'Bit') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsBoolean($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq '17') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq '16') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq '14') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'Short') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'Long') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'DateTime') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'Currency') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'IEEESingle') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsFloat($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'IEEEDouble') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDouble($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'Guid') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'Text') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -eq 'LongText') { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-					elseif ($column.Coltyp.ToString() -in ('Binary', 'LongBinary'))
-					{
-						$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
-						if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
-					}
+					$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 					
 					# Convert FileAttributes from Int to human readable string
 					if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
@@ -576,17 +889,17 @@ function Read-EDB
 					{
 						$columndata | Add-Member -MemberType NoteProperty -Name "$($column.Name)" -Value $data
 					}
-				} # end for each
+					
+				} # end for each Column
 				$columndata | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
-				
-				# try the next row
-				# Try to move to the next record in the table. If there is not a next record
-				# this returns, if a different error is encountered an exception is thrown.
-				if (![Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
+				if ($r % 50 -eq 0)
 				{
-					break # to the next Table
+					$p = ($r/$RecCount).tostring('P0').trim('%')
+					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($p)%" -PercentComplete "$($p)"
 				}
+				$r++
 			} # end while
+			Write-Progress -Activity "Reading dB" -Status "Table: $($TableName)" -Completed
 			[System.GC]::Collect()
 		}
 		
@@ -1537,8 +1850,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCNNe87jxgK5PAd
-# vEy7aYEbaKq88YDuReKi5SeFaAaqoaCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDQZmnrS/JNpHlp
+# VtOLePmytH84exUaGM/HOK1zY+a8lKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -1758,35 +2071,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIMzIUUALZM4mVXqEKYXSDlrFPnke1eRM
-# 9qJL7o/rfCOJMA0GCSqGSIb3DQEBAQUABIICAH+v9XdIoT3RQjRANHsPPXSjxEzR
-# z3npHFHmQK/N+kMdePG+3bckZ+R6fNLHUVDTJT3CvY3U7hBh9JoQM9/5+WAMnwNi
-# tvfPCqe2HDW9S4t+g0QDARSRR8BLXZQ+NA5IrI6LOl2zRals9SHi9ROojZ4CzUZo
-# OOtq3PQwpFET/XzPuiQ5Jd3L9k6ZrDUifyEqTnG95NCIxE7tJwAvX2Qus51mQlNK
-# TO1oQkXwGl/uxK016yNbPS4SuNvin96Lv784PbJ2OJTZ22HxtLZ1pVCymzVfpanl
-# 3ixOyamCk7mkk4HmGA4+zNHQ32akY9KoIEWrgMW5pZegNWD2lsyzOc1PsP5VZw7O
-# R8Qk4T5uSK6CJdqqsbTrvSaNL4fT7fqD51zEf3zYSVpZqwzaGiaI5VChN8/MO7kx
-# Cmxp8M9wy3nfJk3cRb0vkUVJa+GcUY24zCExE3uXEYB5RpkFQ9bBgJ4PolfSERe/
-# DKQkUvAxwtohqaGQeTeNPH8ZT7xXFA9FPjH9pcJkdgxcqfyGN+ex5sa7iewNwRcW
-# 6VnUpfwHHxtQ0nfydjwdEHu3JQHSzFP4BEdmiHAbeJsMaujqE/3lc+fvthLKyTkG
-# wHqtAZEziJUUNh1/AQc+OUb1ixypzPoDJhDi3R4ydPrKGntePxyntn4fzcebNz36
-# AGkaTK44b6KcckoGoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIDSDtmuHp6WZociwKw+5aOx7WPpp+PvK
+# 1HrbE5RNxuPFMA0GCSqGSIb3DQEBAQUABIICABxu18XgQ78TML1m8FB0UWJywN7H
+# wudR8U7d3tiZUzCSGGEI8803IZWwo9inu+Gqp98Qe5+8mi1H543AbEoG9b9kNJEW
+# 7eKk+wy4RO0MoUAXGJTTxQAUrxGKqbjQN4dNCB8Wz0aXhiT81cYw0GqhRXVC3Wf5
+# 9Qza191mkVBWLW28fgK/dF8/ea81nrxXjmt1sqV49ybuyx2frRHhO+ToMIrGIA+8
+# OJ3dXbg/4DtN7frZXL7vvGOR4zeanuoDpko0THfvJgSDa5PEkQTQ1rUt+N+puXcK
+# Pq+tD9g6L+sJZHMaI1874MKjtiA/SQrU/QYnvn4b2IjIe6Xn4bY3YlwGCfjxm2S1
+# 4LmnU/IPByd/S1CrWLi6iqbcKyZXQtzirQokHO+RzxuCtFuDBglVFmTrqJweCB69
+# I3Y1bpaGj3MtxHrnibfwugW7sPCHNdTn4uJiLOPZqZETc2dm4Cn1szOoQaA+uVOo
+# m14uEgEQC1G+ldi32xv7X5cmtPdBcvyIF5uhNOC9b6r67qBDReZQBwH/pZ1FGrRN
+# 8z54KYpeGUDT/1RyniBZPpdoCN2MTwbeJmfTrZ346Y3OPeA7VgJNkRD4VzsPE4rX
+# plC74l1Va0IaD7yCpHNWxhxz1IxX9XzGqASVsVJbajN0ivqb+aC81XmMZWemrDri
+# RMs9HIYt+ipET9ljoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMTYyMTQ1MzFaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMjMxMzUxMjlaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCDFm0paTjHq5Z4uY7eXjiIG1Jyv+2jD8N6YsDDi7DmhoTCBpAYLKoZIhvcNAQkQ
+# BCDQdNPI4CUpFjFFmr2LrFJt3qempH4d11CNhfk/d0fy0zCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgIGeLCHfB+1M7+JAMN8AX6nfh0DS
-# kl0CwtPMIc86iPrwhaVrGUqoI9H4p9n7bo8hM8fzbYMW68QFJPlrNixqHdDmANQY
-# YuhYjt2bPjnnLehcCzLSwV9wNSgkQGL6YxIm9XND+J0dV6PMhiGqexsNM7kKcyp6
-# N3mni0G97P/RU1VPLBMdaIGqFxhIUXAKOvQiMW1qs/Xii07BFTJGMNWdPLGTf4sT
-# 1JAcxPvmKae8329cb78gkTi7QaIZwMfygBfojh0OuGaRE6xhc3mT+TmLIziqCTwt
-# TEbDPXnrwaZwqyuF79Nqt+7YfYN1oiGxo+OmEiUOV2Z4LKwUEngadWhH6JJAkMZe
-# t0FHcSwDPdDOZKUgz6lIhwsOWDgxjMDrX/iBV6jhyxY6txd8zhS1koU90LhRY+AM
-# 2bxP5ez2owuyHnh+4+043rVGBbB8wmlQxiSVqNitT+km5JuXGIkJSDN7kPR1iB1n
-# zR76GoAwYiOlWvN0qrK3IHMEH/eOiJvYwOYENQ==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgLcc5X/QUPckw3TJPMxnK8XsbGvQ
+# Bq/oWAGMjXEiGV8rBNuFag2CRuuVnZg2/t+PsJLefxWEbCcWhSEJBnJgajFAQ+Vf
+# +GmhzStdRTtnhcTvdiG9xnr+rM+iJo8wmtHUFImYzy12URVPdtnPsv+CwMFg51FX
+# 6usOF8yGSDqN0qUZU9WzE3/MspqwU4hB+mDl016MpTet5orht720Qjcui0lgX4V3
+# 2+zwYrssOX/kcTQ82WO79xCHcRd/Nq5eZgXWu5tnU1Uut0IFldNj5w65PLyS9AGv
+# apeVPbXd1l/P+s7fztUZrtRIN0N8jJ7LJgrYtJM6UXiDt2wrE6YvI3gZxD9aEwof
+# AXWfbYqLrktUo/HRdyAHMJJ8oUpI5Vy0MDe5TEp/1of4NY2UruI6vQ/tT1ydv4EJ
+# j3f6wL4DpnNNIharg2OdC3l2xYCMct8bArF3eT28S1WprBVyybY9k9on6WS9SKLb
+# od4/1frm9GRUknJAxq044A/08nkS1Ue/S+3VKA==
 # SIG # End signature block
