@@ -3,13 +3,12 @@ Windows.EDB Browser
 
 ==> [Latest version](https://github.com/kacos2000/WinEDB/releases/latest) <==
 
-   ![image](https://user-images.githubusercontent.com/11378310/207680831-cc3b3a37-0405-4833-894c-9087c607f8d1.png)
+   Search Store Tree view:
+   ![image](https://user-images.githubusercontent.com/11378310/209396462-f41f4165-1ac7-4308-8b28-9ae2d06c8d44.png)
+   
+   Schema Info:
+   ![image](https://user-images.githubusercontent.com/11378310/209396112-17cb7093-324c-43c6-892e-f2447ac0fdc5.png)
 
-
-   - The stand-alone x64 command line tool [WindowsEDB-to-CSV.exe](https://github.com/kacos2000/WinEDB/raw/master/WindowsEDB-to-CSV.exe) or it's equivalent Powershell script [WindowsEDB-to-CSV.ps1](https://github.com/kacos2000/WinEDB/blob/master/WindowsEDB-to-CSV.ps1) will split the contents of the
-    "SystemIndex_PropertyStore" table to multiple CSVs as seen on the image below:
-         
-     ![image](https://user-images.githubusercontent.com/11378310/208239941-3c71634a-91cb-42c1-958a-7622f6826563.png)
 
 Dependencies: 
 - [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48)
