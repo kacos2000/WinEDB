@@ -19,3 +19,13 @@ _______________
 
 --> for research purposes :) 
 
+_______________
+
+**[Note]**<br>
+As of Windows 11 22H2,  Windows Search data is stored in multipe SQLite3 dBs<br>
+found at 'C:\ProgramData\Microsoft\Search\Data\Applications\Windows'*<br>
+Below are some initial Queries:
+  - [PropertyMap](https://github.com/kacos2000/Queries/blob/master/Win_Search_PropertyMap.sql)
+  - [Paths (SystemIndex_1_PropertyStore) query](https://github.com/kacos2000/Queries/blob/master/Win_Search_PropertyStore.sql)
+  - [SecurityDescriptor (SecStore.db) query](https://github.com/kacos2000/Queries/blob/master/Win_Search_SecStore.sql)
+  - [Paths/Files & Timestamps (Windows-gather.db) - can be used to create a TreeView if the paths](https://github.com/kacos2000/Queries/blob/master/Win_Search_gatherdB.sql)
