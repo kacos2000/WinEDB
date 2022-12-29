@@ -36,7 +36,7 @@ param
 (
 	[Parameter(ValueFromPipeline = $true,
 			   HelpMessage = 'Full Path od Database File')]
-	$Input,
+	$InputFile,
 	[Parameter(ValueFromPipeline = $true,
 			   HelpMessage = 'The Full Path a Directory to Export the CSVs')]
 	$OutputFolder = [Environment]::GetFolderPath('Desktop')
@@ -55,8 +55,8 @@ if ([System.String]::IsNullOrEmpty($Input))
 	$openfiledialog.Title = "Please select a properly shut down Windows .EDB file"
 	if ($openfiledialog.ShowDialog() -eq 'OK')
 	{
-		$Input = $OpenFileDialog.FileName
-		Write-Host $input -f White
+		$InputFile = $OpenFileDialog.FileName
+		Write-Host $InputFile -f White
 	}
 	else
 	{
@@ -65,9 +65,9 @@ if ([System.String]::IsNullOrEmpty($Input))
 	}
 }
 
-if (!(Test-Path -Path $Input))
+if (!(Test-Path -Path $InputFile))
 {
-	Write-output "$($Input) does not exist"
+	Write-output "$($InputFile) does not exist"
 	Exit
 }
 
@@ -82,23 +82,23 @@ function Copy-DB
 		[Parameter(Mandatory = $true)]
 		$ExportFolder
 	)
-	$Input = $SourcedB
+	$InputFile = $SourcedB
 	
 	# Get a random Filename
 	$outfile = "$($env:TEMP)\$([IO.Path]::GetRandomFileName())"
 	
 	# copy/overwrite db to system temp just in case
-	Write-Host "Copying $($input)" -f Yellow
-	[System.IO.File]::Copy($Input, $outfile, $true)
+	Write-Host "Copying $($InputFile)" -f Yellow
+	[System.IO.File]::Copy($InputFile, $outfile, $true)
 	
 	# Check File Sizes to verify copy
-	$ifs = [System.IO.FileInfo]::New($Input).Length
+	$ifs = [System.IO.FileInfo]::New($InputFile).Length
 	$ofs = [System.IO.FileInfo]::New($outfile).Length
 	
 	# Compare the 2 files
 	if ($ifs.CompareTo($ofs) -eq 0)
 	{
-		Write-Output "$($Input) copy to $($env:TEMP) => Success"
+		Write-Output "$($InputFile) copy to $($env:TEMP) => Success"
 		# check if temp db is Read-Only
 		if ([System.IO.File]::GetAttributes($outfile).HasFlag([System.IO.FileAttributes]::ReadOnly))
 		{
@@ -110,11 +110,11 @@ function Copy-DB
 		Load-ManagedInterop
 		
 		# Start Parsing the Temp dB
-		Read-EDB -File $outfile -Outfolder $ExportFolder -OriginalEDB $Input
+		Read-EDB -File $outfile -Outfolder $ExportFolder -OriginalEDB $InputFile
 	}
 	else
 	{
-		Write-output "Copy of $($Input) to $($env:TEMP) Failed"
+		Write-output "Copy of $($InputFile) to $($env:TEMP) Failed"
 		Stop-Transcript
 		Exit
 	}
@@ -139,12 +139,6 @@ $FileAttributesEnum = [System.Collections.Hashtable]@{
 	"32768"  = "IntegrityStream"
 	"131072" = "NoScrubData"
 }
-
-$TablesToKeep = [System.Array]@(
-	'SystemIndex_Gthr'
-	'SystemIndex_GthrPth'
-	'SystemIndex_PropertyStore'
-)
 
 $MSysTypes = [System.Collections.Hashtable]@{
 	'1' = 'Table'
@@ -262,6 +256,12 @@ $sizes = @(
 	'System_Size'
 	'TransferSize'
 )
+
+# Create match strings
+$szlist = $sizes -join '|'
+$tlist = $timespans -join '|'
+$dlist = $dates -join '|'
+$ulist = $unicodeASbinary -join '|'
 
 function Get-EDBcolumnData
 {
@@ -783,7 +783,7 @@ function Read-EDB
 			} # End While
 			
 			# Create HashTable
-			$Types = ($pairs | sort -Property 'Type' -Unique).Type
+			$Types = ($pairs | Sort-Object -Property 'Type' -Unique).Type
 			$HashTable = [System.Collections.HashTable]@{}
 			
 			# Get each Type on its own
@@ -929,7 +929,7 @@ function Load-ManagedInterop
 		$DeflatedStream = New-Object IO.Compression.DeflateStream([IO.MemoryStream][Convert]::FromBase64String($EncodedCompressedFile), [IO.Compression.CompressionMode]::Decompress)
 		$UncompressedFileBytes = New-Object Byte[](74120)
 		$null = $DeflatedStream.Read($UncompressedFileBytes, 0, 74120)
-		$null = [Reflection.Assembly]::Load($UncompressedFileBytes)
+		$null = [System.Reflection.Assembly]::Load($UncompressedFileBytes)
 		Write-Output "'Esent.Collections.dll' loaded OK"
 		$EncodedCompressedFile = $UncompressedFileBytes = $null
 		
@@ -940,7 +940,7 @@ xL0HYFVF9gc8c19/eUnefS95Lw1eQgmXvCSQQghFei9KE0FBOtLkYQKIhNBEUBdQFFGxIXbFFexrL9hX
 		$DeflatedStream = New-Object IO.Compression.DeflateStream([IO.MemoryStream][Convert]::FromBase64String($EncodedCompressedFile), [IO.Compression.CompressionMode]::Decompress)
 		$UncompressedFileBytes = New-Object Byte[](122744)
 		$null = $DeflatedStream.Read($UncompressedFileBytes, 0, 122744)
-		$null = [Reflection.Assembly]::Load($UncompressedFileBytes)
+		$null = [System.Reflection.Assembly]::Load($UncompressedFileBytes)
 		Write-Output "'Esent.Isam.dll' loaded OK"
 		$EncodedCompressedFile = $UncompressedFileBytes = $null
 		
@@ -1785,7 +1785,7 @@ fwba/X8=
 		$DeflatedStream = New-Object IO.Compression.DeflateStream([IO.MemoryStream][Convert]::FromBase64String($EncodedCompressedFile), [IO.Compression.CompressionMode]::Decompress)
 		$UncompressedFileBytes = New-Object Byte[](380280)
 		$null = $DeflatedStream.Read($UncompressedFileBytes, 0, 380280)
-		$null = [Reflection.Assembly]::Load($UncompressedFileBytes)
+		$null = [System.Reflection.Assembly]::Load($UncompressedFileBytes)
 		Write-Output "'Esent.Interop.dll' loaded OK:"
 		Write-Output "'Esent.Interop, Version=1.9.4.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35'"
 		$EncodedCompressedFile = $UncompressedFileBytes = $null
@@ -1801,14 +1801,14 @@ fwba/X8=
 
 # Set Folder for output
 $snow = Get-Date -Format FileDateTimeUniversal
-$dbfilename = Split-Path -Path $Input -Leaf
+$dbfilename = Split-Path -Path $InputFile -Leaf
 $outfolder = $OutputFolder + "\$($dbfilename)_$($snow)"
 # Create Folder for exported Table data
 $null = [System.IO.Directory]::CreateDirectory("$($outfolder)")
 
 Start-Transcript -OutputDirectory $outfolder -IncludeInvocationHeader
 Write-Host $input -f Cyan
-Copy-DB -SourcedB $Input -ExportFolder $outfolder
+Copy-DB -SourcedB $InputFile -ExportFolder $outfolder
 [System.GC]::Collect()
 Stop-Transcript
 
@@ -1822,8 +1822,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD1uIjI6oR6RvnH
-# NnDtkPOxWBX55+/MH/a9d5B+6H9yA6CCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBZAO2uGZXsoHas
+# GAF4pjm5no/o6ZXntVWFvq/Dpd+DEKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2043,35 +2043,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIJ3KqveqkwNsMx0FS7dBaRvBNsdLRxve
-# JXhEwfsV+NPDMA0GCSqGSIb3DQEBAQUABIICABApqN3N8X+uyqmfIAHNiy3DdtRZ
-# r8P6Jv+ER6l7aRbgTo+g6tvkB0AB/PVgNqJ2hhnJV3vXeHeYpRDIk8zde51P1i8u
-# FKhEooyo/9WeXQCU6OM7ufinc+MgZUQgft6Me67+EZuRgpNsGmmT0VQIZGEb/Ghg
-# N2wX16GqfQnyEnq0fSpCjv56DJFCuEfLnn1DUl5lc0zu14sysbxtQidFspx9izFA
-# i7njQZ0vAlJAkkqG5oStOiF1RW2PmcHspt1WWLv/9JdxlhwkoyFzeW0vMGpgBM5E
-# H16IRmtvkKSC1eKkh2bpkEQuZsi0AYrnK6dqvS0JndqL3biF4jMzdb6Ug1ZHdmsd
-# OuwtzGt2khh5rfYP19ScVKtAvfG8aTSdc8VtlIBQgz08PyBKppli0jEBqOJQJTZP
-# RHjpi5wlMxLrZ20eeCkQ3Zm9/3xKFYIplSetrvk0Otx1sjCmERV/aESB5dRMNzHq
-# Elrf+UIvqJVjLoNgRGwDBkNFJC4V2k6PIJbgdqANm/SoOXYkUAXEH+KyRziQcPGG
-# KuBmTQP7POX7Bgy7vo13NHC0U601du0Vj/eaSvNW5/Okzkr4lnRIyL9y3xUgiKax
-# 9Aswl/d6xmtA1y5e4Skjsolpzkgi4mozlziubMd5/9TjMvcZ6Ka9X+Ni2pB6Ve40
-# 8oXNUniYwlSmr3cBoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIPQqWgV8KJantQ9yC8Ag8Z2yS1IjXqvv
+# GgP4uLo7/dwZMA0GCSqGSIb3DQEBAQUABIICACvpeAUyGb/K/4jRWKTLwDGrlrM2
+# /h0mQohWyBRDuJDp6i5g5REwZvFrwhdAXWiA4wb9qxLMUzmZ9Le92qBlDyBnzjHh
+# 0dxXiG219o4MdQXCg2I+Vny/8s8ltW3gFDfnkDzSRWA+rZv2MF5KUXn/JxXX8On5
+# +xXhoQHtzQJsQCOzkrs5DIqTW5SlyylBKXE1DgYaPgFdE2Hgfu0YoJfRdcvWDuK7
+# 0eVvKtjIvg5CM3f6TH/GjpcVxI2P2123tNV6hc8kkMHJsIE6JdB8h4VaHBg+/ibx
+# ZFrzbIa3mG/73j2yxbCxcs3aY5B14gcFDFhoVbhb4OIHIFe1g6PZ7/+uFhTAiDZ3
+# N+aCLNmqxfRRhwG+pwcbwNqN4qesq14PxbmO2V2bAalp7uaZCcqyPQ3TnNmbh7Q1
+# nKwsjUYO8BjpKoBI8tcsIBFTPNzK5rptulDdRWEazvoq1dsoRDxUBy6ed5+KgEM3
+# ZpBApEfLW5b1eUjMPTQ3kBMQEIZbMlBlHhZ5IZztY459Vw3AP47XoHH2puP5D1pI
+# o36Xc03qKiAlbFBFi5LLvkKvaXKz26759IZWKXGJG7rJCvu70LuPc5RFAC21YeRn
+# 05+3APWpUnTzgDcIEwxReNw9SNyL1HhXfTXGsHWEQYLmzAfN8/LrIb8MlPc/MLqA
+# VW+S2vmKgzM63IP1oYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMjkxMTU5NTBaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMjkxMjQ5MDZaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCBuitdX5yPLgzzT7YmJtXihzqmmj5QsdR2gItcBqqfHSDCBpAYLKoZIhvcNAQkQ
+# BCD/mQOcFAwj4lTwZNzT0YDr7OGSBewjHAf15RoM8um3szCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgJVXFZHgNO+UGeaV7TDFMj2TgiB2
-# bhGMw4rwC9nFtw5CxbFBK0IOldWxBROMv1IEphpgcLM1G8/IIEFxYJA9fSZN18Iu
-# ogoM1B2+NnJ8eqZhPswRAU7Arm9NGfOkC0k1uwb3zZ1QiTcqEtj0hJa77aDKfrag
-# u5HkHmLfMZudy3/e3NvSEhab6JIorXCtZ4w6xMszYwwzaSzTgGDJpuKltUrfL4P5
-# 59NF4L/u4FQXo/+f1DOxcTEPyCIZCU8IXGthwZ7LUXL9sYfQMomW5PAPSuB5NIxN
-# VMVAT1S4E/CY5Vn8K9ztGN799E1Ie4b9g5C5Il0/pI7cVQOkzHFhCXqRsIioVaAp
-# s4hdM26Zrxon+RVMq0cfXsPYSc9QpVOywydLdsnH0JTydh2Uc5Oy0veoSS1qTJ9g
-# F5t0eBb2iooW/EfQFXJLsGOvFaDeARIeRsc7xseHEbyfXFqAMcHSzIucXv8i01e2
-# 3n3y4BERnV5leFQPW4AaKUFhyvK9fvv4Qbwq2w==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgL6wAC5gsu0V4t5baKwBrqKbbJVT
+# MDcDzG7bxt/lKT+pbAU6OCQIx1/rJ4h3FK9DT2pjQ8zC3jqtjG3WVd9TCpuoJvsZ
+# IoIdaOp2Ewxp7alxkAjiF6VdZ1oQM6E44skcsOhd0fPMgnepKXpZrrTVOL2SXkf8
+# VsX5MpuOlAMbiywipoH3UdGokqcrduNG5ayCS2PKNEX3dcnfYYnt+UUqPAWBFToT
+# lulvDfS9fsYLelPGajIyqor8psbXeJACY6S4KTODpBIKVrIGfkLoZvHz61YDXmOj
+# K0YLX4IB6j/j0pfKlzrDPJurbaUG3BQNFDaPsPQvq8Yhys95CWgi29UjBX7FuZnC
+# F9NqKSH71QSTfsLFvv/JYTFscIr/9yQnFS49wZAeDylYqb+9vkkJfcEPCX//cLD/
+# iGb5dZ8/uMYx65VOmTciPLkB0Bxp7QFpoRc7U/iBOZn382RK4m6U35gOnGXIHuPf
+# EZ5gGpjzOZOfUn1M2FbAEJLpnUfbq/2tn5AdKg==
 # SIG # End signature block
