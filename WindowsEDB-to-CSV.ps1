@@ -274,106 +274,84 @@ function Get-EDBcolumnData
 		[Parameter(Mandatory = $true)]
 		$Column
 	)
-	
-	$szlist = $sizes -join '|'
-	$tlist = $timespans -join '|'
-	$dlist = $dates -join '|'
-	$ulist = $unicodeASbinary -join '|'
-	
-	# Check the Name Column
-	$data = switch ($column.Coltyp.ToString())
+	$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
+	$data = if ($Binarydata -ne $null)
 	{
-		'Long' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'17' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'16' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'14' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'Short'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt16($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'UnsignedByte'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsByte($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'Bit'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsBoolean($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'DateTime'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'Currency'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'IEEESingle'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsFloat($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'IEEEDouble'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDouble($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'Guid'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'Text'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'LongText'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::GetEncoding($column.Cp), [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-		'Binary'{
-			if ($Column.MaxLength -eq 8)
-			{
-				$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
-				if ($Binarydata -ne $null)
+		switch ($column.Coltyp)
+		{
+			'Long' { [Bitconverter]::ToInt32($Binarydata, 0) ; break }
+			'17' { [Bitconverter]::ToUInt16($Binarydata, 0) ; break }
+			'14' { [Bitconverter]::ToUInt32($Binarydata, 0) ; break }
+			'15' { [Bitconverter]::ToInt64($Binarydata, 0) ; break }
+			'Bit'{ [Bitconverter]::ToBoolean($Binarydata, 0) ; break }
+			'Short'{ [Bitconverter]::ToInt16($Binarydata, 0); break }
+			'UnsignedByte'{ $Binarydata ; break }
+			'LongText'{
+				try { [System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata) }
+				catch { [System.Text.Encoding]::UTF8.GetString($Binarydata) }
+				break
+			}
+			'Binary'{
+				switch ($column.name) # Check the Name Column
 				{
-					switch ($column.name.ToString())
+					{ $_ -eq 'LastModified' }
 					{
-						{ $_ -eq 'LastModified' }
-						{
-							try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
-							catch [System.Management.Automation.MethodInvocationException] { }
-							catch { [System.BitConverter]::ToString([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None), $null).Replace('-', ''); break }
-						}
-						{ $_ -match $szlist }
-						{
-							try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
-							catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
-						}
-						{ $_ -match $dlist }
-						{
-							try { [datetime]::FromFileTimeUtc([Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
-							catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
-						}
-						{ $_ -match $tlist }
-						{
-							try
-							{
-								$dur = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
-								"$([timespan]::FromTicks($dur).ToString('dd\:hh\:mm\:ss')) ($($dur))"
-								break
-							}
-							catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
-						}
-						{ $_ -match 'ActivityHistory_Importance' }
-						{
-							try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt64($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
-							catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
-						}
-						default { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+						try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString($Binarydata).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+						catch [System.Management.Automation.MethodInvocationException] { }
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 					}
-				}
-				else { break }
-			}
-			else
-			{
-				$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
-				if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
-				else { break }
-			}
-		}
-		'LongBinary'{
-			switch ($column.name.ToString())
-			{
-				{ $_ -match $ulist }{
-					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
-					if ($Binarydata -ne $null)
+					{ $_ -match $szlist }
 					{
-						try { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $column.Columnid, [System.Text.Encoding]::Unicode, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None) }
+						try { [Bitconverter]::ToUInt64($Binarydata, 0) ; break }
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					}
+					{ $_ -match $dlist }
+					{
+						try { [datetime]::FromFileTimeUtc([Bitconverter]::ToUInt64($Binarydata, 0) ).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					}
+					{ $_ -match $tlist }
+					{
+						try
+						{
+							$dur = [Bitconverter]::ToUInt64($Binarydata, 0) 
+							"$([timespan]::FromTicks($dur).ToString('dd\:hh\:mm\:ss')) ($($dur))"
+							break
+						}
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+					}
+					{ $_ -match 'ActivityHistory_Importance' }
+					{
+						try { [Bitconverter]::ToUInt64($Binarydata, 0) }
 						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
-						break
 					}
-					else { break }
-				}
-				default {
-					$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
-					if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
-					else { break }
+					default { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 				}
 			}
-		}
-		default {
-			$Binarydata = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
-			if ($Binarydata -ne $null) { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
-			else { $null }
+			'LongBinary'{
+				if ($column.name -match $ulist) # Check the Name Column
+				{
+					try { [System.Text.Encoding]::GetEncoding($column.Cp).GetString($Binarydata) }
+					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
+					break
+				}
+				else { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+			}
+			'Text'{
+				try { [System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata)  }
+				catch { [System.Text.Encoding]::UTF8.GetString($Binarydata) }
+				break
+			}
+			'DateTime'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+			'Currency'{ [Bitconverter]::ToInt64($Binarydata, 0) ; break }
+			'IEEESingle'{ [Bitconverter]::ToSingle($Binarydata, 0) ; break }
+			'IEEEDouble'{ [Bitconverter]::ToDouble($Binarydata, 0) ; break }
+			'16' { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+			'Guid'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsGuid($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+			default { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 		}
 	}
+	else { $null }
 	return $data
 } # End Get-EDBcolumnData
 
@@ -655,7 +633,6 @@ function Read-EDB
 				$RowRecordData = [PSCustomObject]@{ }
 				foreach ($column in $ColumnArray)
 				{
-					if (![Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)) { continue }
 					$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 					
 					# Add column data to psobject
@@ -666,8 +643,7 @@ function Read-EDB
 					
 				} # end for each column
 				$null = $RowRecords.Add($RowRecordData)
-				
-								
+												
 				if (!!$ColumnTypes[[System.String]$RowRecordData.ColtypOrPgnoFDP]) { $RowRecordData.ColtypOrPgnoFDP = "$($ColumnTypes[[System.String]$RowRecordData.ColtypOrPgnoFDP]) ($($RowRecordData.ColtypOrPgnoFDP))" }
 				if (!!$MSysTypes[[System.String]$RowRecordData.Type]) { $RowRecordData.Type = "$($MSysTypes[[System.String]$RowRecordData.Type]) ($($RowRecordData.Type))" }
 				if ($r % 50 -eq 0)
@@ -833,7 +809,7 @@ function Read-EDB
 						$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 						
 						# Convert FileAttributes from Int to human readable string
-						if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
+			#			if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
 						
 						# Add column data to psobject
 						if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
@@ -877,7 +853,7 @@ function Read-EDB
 					$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 					
 					# Convert FileAttributes from Int to human readable string
-					if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
+			#		if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
 					
 					# Add column data to psobject
 					if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
@@ -1846,8 +1822,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCbo1wCRK3i9PTh
-# 1YrMp0T8bI2HmMe/Tyox147tnvAMHKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD1uIjI6oR6RvnH
+# NnDtkPOxWBX55+/MH/a9d5B+6H9yA6CCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2067,35 +2043,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIOu7dxXVztb1in3MHRq4FK2r8qE+6K/E
-# 1KuyG+VOTnD2MA0GCSqGSIb3DQEBAQUABIICAGIHXTJvrHT2zJfu2aqwAuEudw0V
-# fRWWTseZOcZ6n3B6ov3a59bQ9vr7sR+BJPLUJWBSfLr/0fFqVZyoOEc2+61NWEo1
-# VB1JHFJRdPRtUmvrEJrde20d6aMeCiRxypReH8Qc2D9fafQoUAfj/yJ4ajVnyXV0
-# fNCnvdEkGE9/4zfQMhbJkgwUlQ5bcvHzPrPk1zm+c5CgQDjkyw6EqqZ0Ue9iK+/F
-# mrS/BApdVOqsJpg8IjnTIrXBBTjB3EgZujTX0R4HGvW+/R+2bbhZivtVzI46eud7
-# fcG2jHUAabGvM5e0pzKt160e6cupGizLjpI+hff35RfwIrDI71LtElSu1TsOHJB8
-# PqY/vcaP5KPzLfJ1tejTbM+bYAdwYRMzbgER5e+snCSpg3FUyoMNoYNWf8qPjmUw
-# hFI6bbWtOHX+EtRkbnIqLIMhv+I7iekQ9T+PtaeKToaZhSZGgeEfLffULpo14LSL
-# ORs/qRVVmWXy1s84nYCxt0kseV6bJu4D520Zzy7YrZBypSsxIgjfp//ThFilRsNo
-# NgM7dURm9oiDnzIpQ+MFdQrZqT5FPfITfInlhcUnTb28dUiNS+LjNUq7KKomGxax
-# JsP6SJyBGbgSBY6brw61MRikI78nTY/7T1DeQgU2j6gdB+ETzNi2BMXk6IARIXoA
-# KI3zsVxe8xqmbT+zoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIJ3KqveqkwNsMx0FS7dBaRvBNsdLRxve
+# JXhEwfsV+NPDMA0GCSqGSIb3DQEBAQUABIICABApqN3N8X+uyqmfIAHNiy3DdtRZ
+# r8P6Jv+ER6l7aRbgTo+g6tvkB0AB/PVgNqJ2hhnJV3vXeHeYpRDIk8zde51P1i8u
+# FKhEooyo/9WeXQCU6OM7ufinc+MgZUQgft6Me67+EZuRgpNsGmmT0VQIZGEb/Ghg
+# N2wX16GqfQnyEnq0fSpCjv56DJFCuEfLnn1DUl5lc0zu14sysbxtQidFspx9izFA
+# i7njQZ0vAlJAkkqG5oStOiF1RW2PmcHspt1WWLv/9JdxlhwkoyFzeW0vMGpgBM5E
+# H16IRmtvkKSC1eKkh2bpkEQuZsi0AYrnK6dqvS0JndqL3biF4jMzdb6Ug1ZHdmsd
+# OuwtzGt2khh5rfYP19ScVKtAvfG8aTSdc8VtlIBQgz08PyBKppli0jEBqOJQJTZP
+# RHjpi5wlMxLrZ20eeCkQ3Zm9/3xKFYIplSetrvk0Otx1sjCmERV/aESB5dRMNzHq
+# Elrf+UIvqJVjLoNgRGwDBkNFJC4V2k6PIJbgdqANm/SoOXYkUAXEH+KyRziQcPGG
+# KuBmTQP7POX7Bgy7vo13NHC0U601du0Vj/eaSvNW5/Okzkr4lnRIyL9y3xUgiKax
+# 9Aswl/d6xmtA1y5e4Skjsolpzkgi4mozlziubMd5/9TjMvcZ6Ka9X+Ni2pB6Ve40
+# 8oXNUniYwlSmr3cBoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMjMxOTAyMTRaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjEyMjkxMTU5NTBaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCAM7FJY/880R9tz+qpIHhGv+qOhXil8EIiKxIXjWP0auTCBpAYLKoZIhvcNAQkQ
+# BCBuitdX5yPLgzzT7YmJtXihzqmmj5QsdR2gItcBqqfHSDCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgFr3XwLJ0TEjxjrYH4O8msJH5M4V
-# pP1PPY74sx6ixtyULoLS+ekfIZqUrGo2BJJnsOsaWab61+Jrqz6tLlPdnrYWyTCK
-# mE1HLfV7VIzgQ+T9JS3FHwthsr53SkHhhAHilPyfTYRvJaAfR4NDu9agmejVawys
-# bT4wKuEgg1XQ3YIbupeQlIFEvTImKk/88fdBR9TJvxC7rNQ7C4rtV+5y7mm5QUCQ
-# oyry/LZ+fdBvLsqeTjCsms/R8yQ76ZyKmgEPh1BUW6zL6zTLtb2HQiC+q/VabjYF
-# LWOfnPI2bekzhBeKREQVid+jXYMgOcEwtpiTHelh/5GDyQc/KRzrSIyDtqVQjVML
-# Exx+yRK+CrZagwHjX6abO2IEkSD29V6uuLi4wGXV4nNQjnUjy1V0YfXzpVHhBIet
-# 8kJIJF6NqrC/D8NICIXyZ9gZ7q1Hoieb2Pu2RniC1K0Z0A1v5vhBom0m/VZnCVle
-# DFGO4JiIQ3plc5ClBtMJq2w8IZlZ+MjywbhbJA==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgJVXFZHgNO+UGeaV7TDFMj2TgiB2
+# bhGMw4rwC9nFtw5CxbFBK0IOldWxBROMv1IEphpgcLM1G8/IIEFxYJA9fSZN18Iu
+# ogoM1B2+NnJ8eqZhPswRAU7Arm9NGfOkC0k1uwb3zZ1QiTcqEtj0hJa77aDKfrag
+# u5HkHmLfMZudy3/e3NvSEhab6JIorXCtZ4w6xMszYwwzaSzTgGDJpuKltUrfL4P5
+# 59NF4L/u4FQXo/+f1DOxcTEPyCIZCU8IXGthwZ7LUXL9sYfQMomW5PAPSuB5NIxN
+# VMVAT1S4E/CY5Vn8K9ztGN799E1Ie4b9g5C5Il0/pI7cVQOkzHFhCXqRsIioVaAp
+# s4hdM26Zrxon+RVMq0cfXsPYSc9QpVOywydLdsnH0JTydh2Uc5Oy0veoSS1qTJ9g
+# F5t0eBb2iooW/EfQFXJLsGOvFaDeARIeRsc7xseHEbyfXFqAMcHSzIucXv8i01e2
+# 3n3y4BERnV5leFQPW4AaKUFhyvK9fvv4Qbwq2w==
 # SIG # End signature block
