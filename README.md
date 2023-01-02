@@ -27,4 +27,4 @@ Below are some initial Queries:
   - [PropertyMap](https://github.com/kacos2000/Queries/blob/master/Win_Search_PropertyMap.sql)
   - [Paths (SystemIndex_1_PropertyStore) query](https://github.com/kacos2000/Queries/blob/master/Win_Search_PropertyStore.sql)
   - [SecurityDescriptor (SecStore.db) query](https://github.com/kacos2000/Queries/blob/master/Win_Search_SecStore.sql)
-  - [Paths/Files & Timestamps (Windows-gather.db) - can be used to create a TreeView if the paths](https://github.com/kacos2000/Queries/blob/master/Win_Search_gatherdB.sql)
+  - [Paths/Files & Timestamps (Windows-gather.db) - can be used to create a TreeView of the paths](https://github.com/kacos2000/Queries/blob/master/Win_Search_gatherdB.sql)
