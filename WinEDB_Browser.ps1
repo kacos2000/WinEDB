@@ -29,6 +29,7 @@ function Main {
 	$script:ExitCode = 0 #Set the exit code for the Packager
 }
 
+
 #region Source: MainForm.psf
 function Show-MainForm_psf
 {
@@ -650,10 +651,17 @@ function Show-MainForm_psf
 			param
 			($rPath,$RowRecords)
 			
-			# Sort
-			$outdata = $RowRecords | Sort-Object -Property @{ expression = { $_.psobject.properties.count } } -Descending
-			# Save Records to CSV
-			$outdata | Export-Csv -Path $rPath -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append
+			# Get all the Headers
+			$Headers = [System.Collections.ArrayList]@{ }
+			$RowRecords.ForEach{ $_.psobject.properties.Name.foreach{ if (!$Headers.Contains($_)) { $null = $Headers.Add($_) } } }
+			$Headers.Sort()
+			# Export the Headers (for debugging/comparisons)
+			$Headers | Out-File -FilePath "$($rPath.TrimEnd('Records.csv'))Headers.txt" -Encoding utf8
+			# Create a blank CSV with only headers
+			$Headers -join '|' | Add-Content -Path $rPath
+			# Add the Records to CSV
+			$RowRecords | Export-Csv -Path $rPath -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
+			$Headers.Clear()
 			$RowRecords.Clear()
 			$outdata.Clear()
 			[System.GC]::Collect()
@@ -928,7 +936,7 @@ function Show-MainForm_psf
 					foreach ($xdir in $redirs)
 					{
 						[System.Windows.Forms.Application]::DoEvents()
-						if (!$Parentdict.Contains("$($xdir.Scope)"))
+						if (!$Parentdict.Contains("$($xdir.Scope)") -and $null -ne $xdir.Scope)
 						{
 							$null = $Parentdict.Add($xdir.Scope, @($xdir))
 						}
@@ -1011,7 +1019,7 @@ function Show-MainForm_psf
 				continue # skip table
 			}
 			$progressbar1.Maximum = $RecCount - 1
-			$progressbar1.Step = 100
+			$progressbar1.Step = 500
 			$progressbar1.Value = 0
 			
 			# Iterates over all the columns in the table, returning information about each one.
@@ -1076,7 +1084,7 @@ function Show-MainForm_psf
 				# Get Row Records
 				While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
 				{
-					if (($r % 250) -eq 0)
+					if (($r % 500) -eq 0)
 					{
 						$p = ($r/$RecCount).tostring('P0')
 						$progressbar1.Text = $p
@@ -1188,7 +1196,7 @@ function Show-MainForm_psf
 				# Get Row Records
 				While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
 				{
-					if (($r % 250) -eq 0)
+					if (($r % 500) -eq 0)
 					{
 						$p = ($r/$RecCount).tostring('P0')
 						$progressbar1.Text = $p
@@ -1255,7 +1263,7 @@ function Show-MainForm_psf
 				# Get Row Records
 				While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
 				{
-					if (($r % 250) -eq 0)
+					if (($r % 500) -eq 0)
 					{
 						$p = ($r/$RecCount).tostring('P0')
 						$progressbar1.Text = $p
@@ -1340,11 +1348,10 @@ function Show-MainForm_psf
 				$pairs = [System.Collections.ArrayList]@()
 				$searchstoreid = $coldict[$coldict.Keys.Where{ $_ -match 'System_Search_Store' }]
 				$SystemItemType = $coldict[$coldict.Keys.Where{ $_ -match 'System_ItemType' -and $_ -notmatch 'System_ItemTypeText' }]
-				
+				$Status.Text = "Please wait - Reading Table: '$($TableName)' - Collecting Search Types"
 				While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
 				{
 					# Read the Work Id (Index value) and System Item Types
-					$Status.Text = "Please wait - Reading Table: '$($TableName)' - Collecting Search Types"
 					$workid = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $coldict.WorkID, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
 					if($null -ne $SystemItemType){
 						$col = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $SystemItemType, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
@@ -1369,6 +1376,7 @@ function Show-MainForm_psf
 					continue
 				}
 				$workIDdataSize = $ColumnArray.where{$_.Name -eq 'WorkID'}.MaxLength
+				
 				# Colect the Data for each Search type
 				foreach ($stype in $Types)
 				{
@@ -1377,7 +1385,7 @@ function Show-MainForm_psf
 					if($SystemItemTypes.count -eq 0){continue}
 					
 					$ItemTypesHashTable = [System.Collections.HashTable]@{ }
-					foreach ($sit in $SystemItemTypes) # $workIDvalue in $Hashtable[$type]
+					foreach ($sit in $SystemItemTypes) 
 					{
 						$ItemTypesHashTable[$sit] = @($pairs.Where{ $_.Type -eq $stype -and $_.ItemType -eq $sit }.WorkID)
 						if ($ItemTypesHashTable[$sit].count -eq 0) { continue }
@@ -1499,13 +1507,14 @@ function Show-MainForm_psf
 						}
 					} # end if $TableName -eq 'SystemIndex_Gthr'
 					
-					if (($r % 250) -eq 0)
+					if (($r % 500) -eq 0)
 					{
 						$p = ($r/$RecCount).tostring('P0')
 						$progressbar1.Text = $p
 						$progressbar1.PerformStep()
 						$Status.Text = "Please wait - Reading Table: '$($TableName)' with $($columnCount) Columns and $($RecCount) Records - $($p)"
 						[System.Windows.Forms.Application]::DoEvents()
+						[System.GC]::Collect()
 					}
 					
 					$r = $r + 1
@@ -2946,7 +2955,7 @@ fwba/X8=
 		$repo = "kacos2000/WinEDB"
 		$latestR = "https://api.github.com/repos/$($repo)/releases/latest"
 		$releases = "https://api.github.com/repos/$($repo)/releases"
-		$aboutmessage = "WinEDB Browser $($WinEDB_BrowserVersion)`nCostas Katsavounidis © 2022`nhttps://github.com/kacos2000"
+		$aboutmessage = "WinEDB Browser $($WinEDB_BrowserVersion)`nCostas Katsavounidis © 2023`nhttps://github.com/kacos2000"
 		$downlink = "https://github.com/kacos2000/WinEDB/releases/latest"
 		
 		[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -5642,8 +5651,8 @@ Main ($CommandLine)
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBC/cfF7hawteb6
-# gmK9+F7kUI+y4xeM1zNUiGYda3qbWKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBhClDR4b5xMcp9
+# sNMJHMAwdr20CW9BSebwP6tM/2PS5qCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -5863,35 +5872,35 @@ Main ($CommandLine)
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIBCYXRWQla8ccIItynowjX+WtP7JrVvo
-# JoMnBqntuBTJMA0GCSqGSIb3DQEBAQUABIICAFQJUshbCrn+2sEYWwgyWHgkBHjq
-# Y6RsIQbbkKA1CxXPftxbXvy1nOsOpgnDvM6ACAeY2xjSpPltOddUsVHU8+Na4WpI
-# YT2Rv1TemzHrDD2aKBqvriIRy2Q1Bsl7CtbgM1ovQEoSzVJ2+m5e2ZLr89HNfMTO
-# Y5I7C4irEfgFqamH4FhpqSS8FLuEMYDQuYGBaAHVwcLgKz4gcp+NoLWj0cbiaYYQ
-# 2y5tS4ORufFCNQH43zPsui//nkhgDo9MGk9yVJdPrtQScyfCx8fCdK8ipI89hzgf
-# iQUX/vi/96hI4to8sOf1ZLH61WzuYG+WJMzCZAkLCrKmqYQODowGpyyHkFmW/urb
-# HBDprm/v/aINa6qcmdIgZ/f2mljheetXBb0iET6ddWwubP4lROv/O/3topUnktyp
-# c94PWsto4r8gzMkSpU7iOMugw6p4JqCZUi2yH97JUH4KE4m/WxbYkewmRzZiW0KU
-# ybIKjTZkkGHP1Km3JntEYe32DEmnntN7L1gch934gf4slP9qajcoqxWdxDud6lle
-# JAY8VxYewvGyDYFVR29vd1jKco9hkMyUcJxvgJ2rSRzt7YbXyXcHvRTxfbG8Z0GH
-# LzlTLz362jfLyvXnNbCTgqJFP7MmDkKbA9184FHQmg8AqAjEn3WGsepV4w5QlkL+
-# 5eJX+soKBlB9S/6RoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIA+U4D2k8BTb8RXS7H0l7NCpbIvDK37Q
+# Jnfyp28/upF2MA0GCSqGSIb3DQEBAQUABIICAHvY57E10ewi5dO+McewsWkoOn+r
+# 2olea29Y6YdSLXshZWbJ0v3WECxZYuofgKTAFkIA+0IFHXe2qYlQUQxr6Q2XyZuk
+# c09Y0ko8baQhbE2EWkU9tzVOx/pxslb8yGmtEkMxLsBqFlhG7XgUCH+XYn6sgjoZ
+# 8VF6+2x8KtrmN30of1bkiZshHAdNBA6hh+7yBh2v3xLftrynaEp/XLHMhlTWrkyw
+# QTDAOZ5RGMAGr5mGgJQVMgd+VZJKlvY2nEVF6OcmOqncq+Osk2pxSgzfe4tu52qf
+# GUcQzYmo7EoVtAJy7RHvoXWSEJ7XZ2hPj1ifxQ90ID+2mtdsHw+NYNCSg5qDDg5/
+# g51cxeaXiFFrPbLqikdgdhs/d109T7M/d5vCKVktaqX8j1EtwUIbW6VNmPyHtm08
+# YvkgjokWgZ0II/FtW+0o5s4NT0GMUSXT8iWwWSlCvs+8B/kBumsA/dgtIYWPoxsk
+# S+IE8xHLicVYXzBdZQELPOVDE+ldSLC9FcRS1lrF5uKp2+emEtKtuo4fzi0SWcqy
+# O4Bd7zLXWkBxHnHsGDHPJQ2bJ1r/lMIC04WGwS4t0ot26/80sGkkONIorhU8+xJC
+# NLtClocNQ+8KYTZV7a7JogKpV5HmdFbp2p21E7tiEZhSPsB1h3cVF6gstWkGfGiZ
+# t+5H3Myjv/7KKDIioYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDEyMDA5NTZaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDIxMzU3MDBaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCAjiM/8njetWou7uFUq5GS23+RFvzaCoQhJDC3zYcEztTCBpAYLKoZIhvcNAQkQ
+# BCCqFtBDnWt1gMKjkFQK+DO10oRlduAj8oZ5Q4iadr4NQjCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgD+d3e29O4j7ZFDgJmkZirt9dFus
-# Kve7k/OMi6MDeVIVFRz8OFxecuE9NNpoweR3dCB9++AwfzOBOst3nmAt6eleSPSj
-# AnXbKPg0EkjMOzCgI2ikOJOi6OS+GfNtV+SPi7m6mpKVXo8DHJUZjF/8828/X3MK
-# 8iJSNaF3nW7Xw+5YpcT9BtNcY/FCwI16EAqwtT6ddMFsjxFAMwHNt1hzMWEXph3o
-# kXNInHkLMu0HCY6eixGKBc/he2PQnmYyfBWLpN/0nRBpTCAqO0kYsMbRe3hmEvzB
-# ixiYZKdOOq2abN6incJ2D9GmPexu4piBOW6Ntm6+rUzAj977OIqF00whE75vKx3V
-# Js+l1zzQQaTE+75/+iXLDQ9Mk23CCJ+GnfKTXI4z7bFunVY7jNlP4MH/sHGdsvo9
-# +5xf+rr7mJeabFiFMtMA0zcugijr2hW9U1i9mu5UkHNorZ1poHGH/ccFhAP40PbE
-# LyP0cy5lQY8TCPaZNL8y9qgKkCwResajNuG6GA==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgK77MSUAL0Np85HjpQUbXcFTTAAw
+# xf+UaBqBn8t9JanWm6kI3Fuj4wMDuXF/3Uq7hE996V4H1VA1H6ih0+78a6xcAQXg
+# zWzuY+0Yvk8uQQdk6kK9b0HM2N4cFnQOJhxQJHTEaLgYYaxUFCBkDfafsShtupye
+# RXDBMuCDS6D7Uzie9a11BHdl/+HF8qVaGxV/3XcysgbgT1fXVfFbTHtn0fJHEdNu
+# FhlmUCRHIdhmgoRFm/kJm0dx3hdl3QLWgN2eesqjFe2XAb/n9VFQjizHtmUA+KZu
+# vpf04KIdZpUntkC5gBpBMQZcDl1mL4kXz8t+uGx7kk2pnm29XLuonBUoX+eM3gXq
+# eczi5l0F0NeQcF+X5UDAxbeqbrRoT6DAe5GK+JYImUbd9khk51Yc2CMZgKJJtkcb
+# I2gt8OkLOCw1L7EcXTTh4I+cGH9zApfVZExArZUJ8JuWrZ5eBRQoS3EUC9FSkYXL
+# o58pXbE2Edsb3N287uvix9aops9xOvyrb5NiIQ==
 # SIG # End signature block
