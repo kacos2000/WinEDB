@@ -219,7 +219,7 @@ $dates = @(
 	'DownloadDateExpireOverride'
 )
 
-$unicodeASbinary = @(
+$unicodeAsLongBinary = @(
 	'LocaleName'
 	'ItemAuthors'
 	'FromName'
@@ -261,7 +261,7 @@ $sizes = @(
 $szlist = $sizes -join '|'
 $tlist = $timespans -join '|'
 $dlist = $dates -join '|'
-$ulist = $unicodeASbinary -join '|'
+$ulist = $unicodeAsLongBinary -join '|'
 
 function Get-EDBcolumnData
 {
@@ -287,11 +287,7 @@ function Get-EDBcolumnData
 			'Bit'{ [Bitconverter]::ToBoolean($Binarydata, 0) ; break }
 			'Short'{ [Bitconverter]::ToInt16($Binarydata, 0) ; break }
 			'UnsignedByte'{ $Binarydata ; break }
-			'LongText'{
-				try { [System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata)  }
-				catch { [System.Text.Encoding]::UTF8.GetString($Binarydata) }
-				break
-			}
+			'LongText'{	[System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata); break }
 			'Binary'{
 				switch ($column.name)
 				{
@@ -333,17 +329,13 @@ function Get-EDBcolumnData
 				# Check the Name Column
 				if ($column.name -match $ulist)
 				{
-					try { [System.Text.Encoding]::GetEncoding($column.Cp).GetString($Binarydata) }
+					try { [System.Text.Encoding]::Unicode.GetString($Binarydata) }
 					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
 					break
 				}
 				else { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 			}
-			'Text'{
-				try { [System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata)  }
-				catch { [System.Text.Encoding]::UTF8.GetString($Binarydata) }
-				break
-			}
+			'Text'{ [System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata); break }
 			'DateTime'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
 			'Currency'{ [Bitconverter]::ToInt64($Binarydata, 0) ; break }
 			'IEEESingle'{ [Bitconverter]::ToSingle($Binarydata, 0) ; break }
@@ -357,7 +349,22 @@ function Get-EDBcolumnData
 	return $data
 } # End Get-EDBcolumnData
 
-
+function Get-SafeFilename
+{
+	param
+	(
+		[Parameter(Mandatory = $true,
+				   ValueFromPipeline = $true,
+				   Position = 0)]
+		[object]$Path
+	)
+	
+	process
+	{
+		$pattern = "[" + (([System.IO.Path]::GetInvalidFileNameChars().foreach{ "\x" + ([int]$_).ToString('X2') }) -join '') + "]+"
+		[System.Text.RegularExpressions.Regex]::Replace($Path, $pattern1,'')
+	}
+} # Get-SafeFilename
 
 function Read-EDB
 {
@@ -610,9 +617,9 @@ function Read-EDB
 		$columnCount = $ColumnArray.count
 		
 		# Export Column List to Txt
-		$TableName | Out-File -FilePath "$($outfolder)\$($dbfilename)_$($TableName).txt" -Encoding utf8
-		"Record Count: $($RecCount)" | Out-File -FilePath "$($outfolder)\$($dbfilename)_$($TableName).txt" -Encoding utf8 -Append
-		$ColumnArray | foreach-object { $_ } | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName)_Columns.csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation
+		$TableName | Out-File -FilePath "$($outfolder)\$($TableName).txt" -Encoding utf8
+		"Record Count: $($RecCount)" | Out-File -FilePath "$($outfolder)\$($TableName).txt" -Encoding utf8 -Append
+		$ColumnArray | foreach-object { $_ } | Export-Csv -Path "$($outfolder)\$($TableName)_Columns.csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation
 		
 		Write-Output "Reading Table: '$($TableName)' with $($columnCount) Columns and $($RecCount) Records"
 		$r = 0
@@ -651,7 +658,7 @@ function Read-EDB
 				$r++
 			} # End While
 			
-			$rpath = "$($outfolder)\$($dbfilename)_$($TableName)_Records.csv"
+			$rpath = "$($outfolder)\$($TableName)_Records.csv"
 			# Get all the Headers
 			$Headers = [System.Collections.ArrayList]@{ }
 			$RowRecords.ForEach{ $_.psobject.properties.Name.foreach{ if (!$Headers.Contains($_)) { $null = $Headers.Add($_) } } }
@@ -701,7 +708,7 @@ function Read-EDB
 				} # end for each column
 				if (!!$MSysTypes[[System.String]$RowRecordData.Type]) { $RowRecordData.Type = "$($MSysTypes[[System.String]$RowRecordData.Type]) ($($RowRecordData.Type))" }
 				# Export Rows
-				$RowRecordData | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append 
+				$RowRecordData | Export-Csv -Path "$($outfolder)\$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append 
 				if ($r % 50 -eq 0)
 				{
 					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName)" -PercentComplete "$(($r/$RecCount).tostring('P0').trim('%'))"
@@ -754,7 +761,7 @@ function Read-EDB
 					}
 					
 				} # end for each column
-				$RowRecordData | Export-Csv -Path "$($outfolder)\$($dbfilename)_$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append 
+				$RowRecordData | Export-Csv -Path "$($outfolder)\$($TableName).csv" -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append 
 				if ($r % 50 -eq 0)
 				{
 					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName)" -PercentComplete "$(($r/$RecCount).tostring('P0').trim('%'))"
@@ -776,28 +783,34 @@ function Read-EDB
 			$pairs = [System.Collections.ArrayList]@()
 			$searchstoreid = $coldict[$coldict.Keys.Where{ $_ -match 'System_Search_Store' }]
 			$SystemItemType = $coldict[$coldict.Keys.Where{ $_ -match 'System_ItemType' -and $_ -notmatch 'System_ItemTypeText' }]
+			$SystemKind = $coldict[$coldict.Keys.Where{ $_ -match 'System_KindText' }]
+			
 			Write-Output "Please wait - Reading Table: '$($TableName)' - Collecting Search Types"
 			While ([Microsoft.Isam.Esent.Interop.Api]::TryMoveNext($Session, $Table))
 			{
 				# Read the Work Id (Index value) and System Item Types
 				$workid = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsUInt32($Session, $Table, $coldict.WorkID, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
-				if ($null -ne $SystemItemType)
+				if (!!$SystemItemType)
 				{
-					$col = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $SystemItemType, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::RetrieveIgnoreDefault, $null)
-					$itemType = if ($null -ne $col) { [System.Text.Encoding]::Unicode.GetString($col) }
-					else { '-' }
-				}
-				else { $itemType -eq '-' }
+					$col = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $SystemItemType, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
+					$itemType = if ($null -ne $col) { [System.Text.Encoding]::Unicode.GetString($col) }	else { '-' }
+				} else { $itemType = '-' }
+				if (!!$SystemKind)
+				{
+					$colk = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumn($Session, $Table, $SystemKind, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None, $null)
+					$Skind = if ($null -ne $colk) { [System.Text.Encoding]::Unicode.GetString($colk) } else { '-' }
+				} else { $Skind = '-' }
 				$Sstore = [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsString($Session, $Table, $searchstoreid, [System.Text.Encoding]::Unicode, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None)
 				$null = $pairs.Add([PsCustomObject]@{
-						'WorkID'   = $workid
-						'Type'	   = $Sstore
-						'ItemType' = $itemType
+						'WorkID'     = $workid
+						'Type'	     = $Sstore
+						'ItemType'   = $itemType
+						'SystemKind' = $Skind.Split(';')[0]
 					})
 			} # End While
 			
 			# Collect Types & ItemTypes
-			$Types = ($pairs | sort -Property 'Type' -Unique).Type
+			$Types = ($pairs | Sort-Object -Property 'Type' -Unique).Type
 			
 			# Get each Search Type on its own
 			if ($Types.count -eq 0)
@@ -810,13 +823,30 @@ function Read-EDB
 			foreach ($stype in $Types)
 			{
 				Write-Output "Reading Table: '$($TableName)' - Collecting 'System_Search_Store' Entries of type: '$($stype)'"
-				$SystemItemTypes = ($pairs.where{ $_.Type -eq $stype } | sort -Property 'ItemType' -Unique).ItemType
+				if ($stype -eq 'mapi16')
+				{
+					$SystemItemTypes = ($pairs.where{ $_.Type -eq $stype } | Sort-Object -Property 'SystemKind' -Unique).SystemKind
+				}
+				else
+				{
+					$SystemItemTypes = ($pairs.where{ $_.Type -eq $stype } | Sort-Object -Property 'ItemType' -Unique).ItemType
+				}
+				
 				if ($SystemItemTypes.count -eq 0) { continue }
 				
 				$ItemTypesHashTable = [System.Collections.HashTable]@{ }
 				foreach ($sit in $SystemItemTypes) 
 				{
-					$ItemTypesHashTable[$sit] = @($pairs.Where{ $_.Type -eq $stype -and $_.ItemType -eq $sit }.WorkID)
+					
+					if ($stype -eq 'mapi16')
+					{
+						$ItemTypesHashTable[$sit] = @($pairs.Where{ $_.Type -eq $stype -and $_.SystemKind -eq $sit }.WorkID)
+						$sit = $sit.split(':')[0]
+					}
+					else
+					{
+						$ItemTypesHashTable[$sit] = @($pairs.Where{ $_.Type -eq $stype -and $_.ItemType -eq $sit }.WorkID)
+					}
 					if ($ItemTypesHashTable[$sit].count -eq 0) { continue }
 					
 					$r = 0
@@ -853,18 +883,20 @@ function Read-EDB
 						$r = $r + 1
 					} #end rows
 					
-					$rpath = "$($outfolder)\$($dbfilename)_$($TableName)_$($stype)_$($sit.replace('/', '-'))_Records.csv"
+					$rpath = Get-SafeFilename -Path "$($outfolder)\$($TableName)_$($stype)_$($sit)_Records.csv"
+					Write-Host "Saving [$($stype)]: $($sit) Records" -ForegroundColor Gray
 					# Get all the Headers
 					$Headers = [System.Collections.ArrayList]@{ }
-					$RowRecords.ForEach{ $_.psobject.properties.Name.foreach{ if (!$Headers.Contains($_)) { $null = $Headers.Add($_) } } }
+					$RowRecords.ForEach{ ($_.psobject.properties.Name).foreach{ if (!$Headers.Contains($_)) { $null = $Headers.Add($_) } } }
 					$Headers.Sort()
 					# Export the Headers (for debugging/comparisons)
-					# $Headers | Out-File -FilePath "$($outfolder)\$($dbfilename)_$($TableName)_$($stype)_$($sit.replace('/', '-'))_Headers.txt" -Encoding utf8
+					# $Headers | Out-File -FilePath $rpath.Replace('Records.csv','Headers.txt') -Encoding utf8 -Append 
 					
 					# Create a blank CSV with only headers
 					$Headers -join '|' | Add-Content -Path $rPath
 					# Add the Records to CSV
 					$RowRecords | Export-Csv -Path $rPath -Delimiter '|' -Encoding UTF8 -NoTypeInformation -Append -Force
+				
 					$Headers.Clear()
 					$RowRecords.Clear()
 					Write-Progress -Activity "Reading dB" -Status "Table: $($TableName) - $($ItemTypesHashTable[$sit].count) [$($stype)] $($sit) Records" -Completed
@@ -909,7 +941,7 @@ function Read-EDB
 				$r++
 			} # end while
 			
-			$rpath = "$($outfolder)\$($dbfilename)_$($TableName)_Records.csv"
+			$rpath = "$($outfolder)\$($TableName)_Records.csv"
 			
 			# Get all the Headers
 			$Headers = [System.Collections.ArrayList]@{ }
@@ -1883,8 +1915,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB/+58jvicmL6U0
-# 9MPkaV2kWq5nvGhesBOJlUYL6XaY6KCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBo5fPJ6kXm/ZYQ
+# pqj370OS1J3bM+0838Wy2ObueYq5RaCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2104,35 +2136,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIMGPERmtxpVNJFwUkomxNZf9TfS3WzYM
-# Ko12oioN2JtAMA0GCSqGSIb3DQEBAQUABIICAGwJy945P2R2o8M1uDS2K1ofUZvH
-# 4ywNmCUhaVf6b0klHJE+2VaraIBK7wcgDh3wTfVyWdiUfeBm1o4kRF5/CIVCx/Xa
-# qyoTX/4Zehi81K1LnShISYb3F+oQydwL7NlAt9KKvVg+5GcHXV0i7kSiO7Cva69w
-# FP4qBEgwpUGKytP8O90J+xNovqQpeHGANW4ii41eAVL/5m0TLNuY9fhFTLcEjLsT
-# Nk3pl06IziC3y5VdMqOUvfS6Niho3yWKk/yle5c2c3AD9GG2lpr4VPfGeuPJ0FvN
-# VdlWhmpbgD0RUduQeI7Bdk7yCCKW1a1C5wOVCAqZ9ERHb/grlIQujozr9xOMILik
-# tnCIMZkzlHvZ/1udaLtTYmPT3gOkjdrFN07Vpp2l4g1NlwRJ9kphCb1K5KfAIS4U
-# LkyM29lM7XnVkpjVCSbhyROWLhRAwfdKTp8R5CXlWXdEZao8h0NVhGUIU8AykZYi
-# pSqJjQzCpdv/cugSuw5/B8YtCqa70G720N8RtUtzJoUoBcyJaeQ5J/SaswkmmTUd
-# VjisICuKxpk/Dup1RmZ4hS7rqeIoVahFtgmiFpOFS6U0xGZvGRB/LtXWqXCvWLpL
-# 9Gapf8x+hRa96W6tjeI5m3UOXM/wdT+RvgHshwEwk8Fdh2p8p/saEpUXm1hEYvhR
-# nPDOvrHAAW23JuxmoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIAQRiWdHrhg8yRMESn6j14fixR+Fy9SB
+# X/lQ+Fc3UPtRMA0GCSqGSIb3DQEBAQUABIICADkkRaEOAWYZ0mk41135znFZp228
+# hux1Fr5rxwkSnhen/FVtLOFg1288lhMIoG2lOhHPnh3DtXkIv8FG9j15NHTik7Su
+# cIz8+Sg6eGFmY4/vEa7NBg/EgAWkCHiRBBaZW7wFS7sxSy66l1sNoEdS44+3Lvni
+# vA1Nrx+qn9f3lohyBC7uBJfo4v79Jt3Lg+1ssN9y9fDrBXdaHgM1QzkRYUSXnLw6
+# RnEQZMSdLb9ezwKL/jfyXLDwO/RxWlx7fzZLmzQOxQW9ivsXGxKiOWkbkVAEl3ML
+# DuI5J5foAmYW+pkfqyUKnVhtljiEQsCHXoyUsXrTbOH7CHh9uSz7uAi+WFbLLIAz
+# 2DwLbvh3TljTalNHj+AnIvvxtosCkeWi4ieu9aJIrlRntEgVnaEJ0i0LmpPzW5lU
+# BlTCkZsjiLYENy7AoydDe+LysfduKQJLdt1TBDp/4IY0V2QqZduR1/8KX+/ImKTT
+# hr5fbDCSyd2t44gD152+jhxvMFSwGhl/rEV7Iy2Ni/b33M9s4amDVk6hkhCMIxPx
+# YQ8ePA89E6CA7t2MCY8KMWma107PUdQyQFr/RhAEHbY+Nf+a3e0GETIIJ4k/MhRH
+# AMz6XUj5YJfpUK3bvISQulIAysVdwg11UQjZqVaj7jPqDht2qfgqSsP2k38bX/Gk
+# xH202ZfM1FH2xvjcoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDIxMzM1MzRaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDYwMTM4MTBaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCAowa35UMgLy+JLwPCNlARDrJMpgHpSSsHK7H4o0A8g1zCBpAYLKoZIhvcNAQkQ
+# BCDtxMJ+swbUBMdNHj2bnjJsHRlx4Tcv+ewbew0Am6SW9DCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgD1WuCOaOMw4O4PLuGgkprbPOXT7
-# 2KeLPsBklaV1yZrtGZEZBZPywS2GX/eKjup7TAtfKqbEwXsbYIDs4o9/t+6bik8r
-# m7PQtIsJ/hrio3WY9R+BeO9ANMXiEU0xHR+961eSezEFcTrnHF39R4LxfkpNajRD
-# aUka14WPtkEOneexw6uzYQmA/YwcUyX+WLs1QwDG1KzmwNmeV7V7CnHzTdekrhq9
-# EXx23ZTHZQM9cLo4i8PLnX9ioFX8RT2yiqxh7wp0KN1ChwwK1FyuvCBVYiT4acmA
-# VZB22t5Je9NSGhVoqeiUrYZnpR/zuOFzkofdp1ZitLo/sNxl91xdMAAjOudIitRe
-# 6IkrRvdlFx9J62mqRWecn7kYaGZZX8Z6Tbq7jTbaYVwUEij7GoAtRipphsG1nz7o
-# f8cFJoUniM73sCQx1KnOPKFApGxeNoQu4qgWWB5ndrJJXyYOizFXEaBUg8nE9boP
-# EN1bwY7DdSupDKVvqQ4azj6+Te5eoZIp4uP67g==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgA7dwJ8ELTH4D7nyk7uTGsrf0QJd
+# cC+r2aQoSf28nJeqrmj9TbnH1C8pUPbZFQz8wpCjPPtxldDx+l0OrgOLx/5eyu8h
+# afVmwEJ9lnO77OJ+NJtOenjL8Cg56+RCUfRjkCvklMaJU4r7wNW+7eU9yBqHgmZj
+# B7RsCgGsxUe9CyiqtcGQCweWkVhroIb9BYn+vswf8cndTBavTudTKZ7bqu6J5ii6
+# YEB6vfwpNjeFXD1tQymnHWHMYeZyOIItUAHO79QWOuzwQyqhpqixiodoUfJb8Fi9
+# w/fZ16vUQRFSw0S+hMuQoPhFPvjR4a6ojieI8cHfi5e+yqQYNAsAHLuiLVDgX+2Q
+# kgG8L2pNlQs5WbjinBn+hJ2jxnbnWk9+hxTFXaKdpXx+ZyUJt/brn2pEDlQcGnpz
+# mJxa6DyaFxmlZrO15KXYgm79JKcLa+VOZL/fJHssVu8jXils+Vw8gi5xY76AUM0d
+# 2vBuO32UuYtam+UvXB2vO7ei32aQQgFrbncOTg==
 # SIG # End signature block
