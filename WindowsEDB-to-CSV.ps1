@@ -121,23 +121,51 @@ function Copy-DB
 }
 
 # https://learn.microsoft.com/en-us/dotnet/api/system.io.fileattributes?view=net-7.0
-$FileAttributesEnum = [System.Collections.Hashtable]@{
-	"1"	     = "ReadOnly"
-	"2"	     = "Hidden"
-	"4"	     = "System"
-	"16"	 = "Directory"
-	"32"	 = "Archive"
-	"64"	 = "Device"
-	"128"    = "Normal"
-	"256"    = "Temporary"
-	"512"    = "SparseFile"
-	"1024"   = "ReparsePoint"
-	"2048"   = "Compressed"
-	"4096"   = "Offline"
-	"8192"   = "NotContentIndexed"
-	"16384"  = "Encrypted"
-	"32768"  = "IntegrityStream"
-	"131072" = "NoScrubData"
+# Full list:
+#
+# Hex       	Dec	Binary	Description
+# '00000001'	'1'	'0000-0000-0000-0000-0000-0000-0000-0001'	ReadOnly
+# '00000002'	'2'	'0000-0000-0000-0000-0000-0000-0000-0010'	Hidden
+# '00000004'	'4'	'0000-0000-0000-0000-0000-0000-0000-0100'	System
+# '00000010'	'16'	'0000-0000-0000-0000-0000-0000-0001-0000'	Directory
+# '00000020'	'32'	'0000-0000-0000-0000-0000-0000-0010-0000'	Archive
+# '00000040'	'64'	'0000-0000-0000-0000-0000-0000-0100-0000'	Device
+# '00000080'	'128'	'0000-0000-0000-0000-0000-0000-1000-0000'	Normal
+# '00000100'	'256'	'0000-0000-0000-0000-0000-0001-0000-0000'	Temporary
+# '00000200'	'512'	'0000-0000-0000-0000-0000-0010-0000-0000'	Sparse_File
+# '00000400'	'1024'	'0000-0000-0000-0000-0000-0100-0000-0000'	Reparse_Point
+# '00000800'	'2048'	'0000-0000-0000-0000-0000-1000-0000-0000'	Compressed
+# '00001000'	'4096'	'0000-0000-0000-0000-0001-0000-0000-0000'	Offline
+# '00002000'	'8192'	'0000-0000-0000-0000-0010-0000-0000-0000'	Not_Content_Indexed
+# '00004000'	'16384'	'0000-0000-0000-0000-0100-0000-0000-0000'	Encrypted
+# '00008000'	'32768'	'0000-0000-0000-0000-1000-0000-0000-0000'	Integrity Stream
+# '00010000'	'65536'	'0000-0000-0000-0001-0000-0000-0000-0000'	Virtual
+# '00020000'	'131072'	'0000-0000-0000-0010-0000-0000-0000-0000'	No_Scrub_Data
+# '00040000'	'262144'	'0000-0000-0000-0100-0000-0000-0000-0000'	Recall_On_Open
+# '00400000'	'4194304'	'0000-0000-0100-0000-0000-0000-0000-0000'	Recall_On_DataAccess
+# '80000000'	'2147483648'	'1000-0000-0000-0000-0000-0000-0000-0000'	TxF flag (Transaction related (?)
+
+$FileAttributesEnum = [Ordered]@{
+	'1'		     = 'ReadOnly'
+	'2'		     = 'Hidden'
+	'4'		     = 'System'
+	'16'		 = 'Directory'
+	'32'		 = 'Archive'
+	'64'		 = 'Device'
+	'128'	     = 'Normal'
+	'256'	     = 'Temporary'
+	'512'	     = 'Sparse_File'
+	'1024'	     = 'Reparse_Point'
+	'2048'	     = 'Compressed'
+	'4096'	     = 'Offline'
+	'8192'	     = 'Not_Content_Indexed'
+	'16384'	     = 'Encrypted'
+	'32768'	     = 'Integrity_Stream'
+	'65536'	     = 'Virtual'
+	'131072'	 = 'No_Scrub_Data'
+	'262144'	 = 'Recall_On_Open'
+	'4194304'    = 'Recall_On_DataAccess'
+	'2147483648' = 'TxF_flag'
 }
 
 $MSysTypes = [System.Collections.Hashtable]@{
@@ -887,8 +915,12 @@ function Read-EDB
 							$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 							
 							# Convert FileAttributes from Int to human readable string (-band ?))
-							#		if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
-							
+							$attr = [System.Collections.ArrayList]@()
+							if ($column.name -match 'System_FileAttributes' -and $null -ne $data)
+							{
+								$FileAttributesEnum.GetEnumerator().foreach{ if (($data -band $_.key) -eq $_.key) { $null = $attr.Add($FileAttributesEnum[$_.key]) } }
+								$data = "$($attr -join ', ')" + " ($($data))"
+							}
 							# Add column data to psobject
 							if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
 							{
@@ -1931,8 +1963,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD8hLT0D28Huxqi
-# nkW+3X25LM/PhwZ6st48Gj0gu47CP6CCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBhhdM73DWHA7Bn
+# 0nt+0cyf2OJB3ZTLhIl2toROOwF/rqCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2152,35 +2184,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIM8ExANl7VaVt+HOoryRQnVldulGDyAB
-# 7ePgB0yxIXrrMA0GCSqGSIb3DQEBAQUABIICAHmjYRb7IO5TZphbSGxJzvvDyD/H
-# WBFqzx8IxD44pLoPVHwWqvNoB749LAOOjyzHWKOAU1k4hE6ZmRw5FFiyjhXFaMYF
-# WmKSd0kGz9PZ8E3QaOb7FYPFkp9+WnuX79UOZW1QK1SQPlTiheh5JWxSruKY15p8
-# 0SosC7oKhr7kj6ZB9WO33MMMPnwJgoLVwJVi52RnZW3KydT2r0/uA5xJFN/g6GOy
-# 4TMXtB011QslBI1lL5R/fz4lHFd0btk00HKy5XeZLa3Osco4E7UqUiiO3VZnDlS3
-# BKK43ZYrf3Yz1FSQjb18DDJOWq2l9ftP5WJo57SqyMlmYwgLiAjKqkTgmjXMFud1
-# TSjETe0h4crPTbIzzu3XepzdrqTDOyUmxHl5QRVtotrsa5Ac/Of5cgYnsu+GXG6K
-# 1dgjo92WQXnnTfXS1JRqEULOgp6A04CpME411M7/c5MEkTgLqBkNwgf/fx3B8T+O
-# 3LujO+xlIvfsCnxrG+W/ALlJl5dmEFNw3HAjDZxmHNpv0lWSu5Fr4JHLY4K0ok70
-# tPluUWa9ZPKaMfjJSYswZ+7IcWMrPkbxirPJczmlHex4QWz4x5R0LYdXN7itF/pd
-# IoKw9+hraucgI1SGrtULtALkAUJWx+maQrMbQZX9OwO9SQsTVn4o2Uc7i21y/eTA
-# RZqP42gtFVTwauj7oYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIN/RJNX+Y0BBFODn/e4Yx1UNxEbNSo51
+# nsb4hqZH/Y+uMA0GCSqGSIb3DQEBAQUABIICAIAYiVEe3UFH/qugerzv5SB+6V4r
+# e/MNbm8OlupUE2ju12GuhhM35tW3E3Z1qxxBPvy8b0UhUsnYehAgVIznsV8BOMde
+# KPWsAB8vEn4N8w0820U/b3FuETKKcNE/YueFRJKkmYUzg38pCK4CP58Jz8lnyAfN
+# AcRp4YmNs7O756lvKvfjl9onlBWLy3Ju7DzLkRfL6k25W3yqTKlhg/OFPdSTVivy
+# wBY2P3z3PWl8Gf+h/NC8RxIuQnp+lZLJDpDYa726itHyKTeenPjtTMxEHWYldNTp
+# b53MdEgLhQvrpMN8RSRp6ClUKIT89lTjHWZdHJrOKwb/Wm2gFTWoVk8+lP80mJbC
+# CJ12j7qaqtvndS7OJHio0XtnK/UQhoZHh6yq0IvRzS2NaaqH6Aubog24Ycxh7xMe
+# 3ElujP8Yd1BtFXMjhgQpCcoTuSjKzPSnQkN5Zz6S/QaCVtUajqX2x2KtPtZZn0Cd
+# iKWzPhv88lkODPDi8kID0oNCyD3LlLTgHkZaC7+P4cvxc8iSx5wwU8UsvcGyXf6z
+# Vpd77yPDdgUfikOeLAzg9gOqwdgVw+2qt5UQOdDbJuvFeSqx7aLFywg4FCxnPdEv
+# VsgGfEPCJg1C7lGWMdUgcWT/+7jjwTQly1pXdpuRqFBslArFUyEa/lda+pRhBxzT
+# UwDXsie7HRdWzEBBoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDYwMjM0MjVaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDcxNDQxMzhaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCAuB7OM1FdSvM10aTBAv/6sR+BsCJaEynderMcmIkeO/DCBpAYLKoZIhvcNAQkQ
+# BCB29Nb8HnbWFwIthBcbCxzncenefI1cxtqdqT5px36SzjCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgI4VFZ3g3gN2re9BTe8Cz25ycFuw
-# 2mzv3OyT8/tcOuBU9cWS0jwqXugKHXKn1qbDeA8hCEyDFBKWpCe1jhYtEpt28DZa
-# VlAKYxmySMUwss5ZV9i8rPeiJkdK7OQ71iP8fqBZVQfT/YDAk7NNfLxODs6fLGgh
-# IEuClGiIQ7Ort99ZS4YsPkVAdEnw8T12UvXIoaa/ux9nwBy7KJsbo4+Wwqo0qWGM
-# LvCQ/3OGIbd+pxmQidjPcL4G7aoKlxssEowIbuhbBeF4789X/T61y3MHBcGlpHJC
-# g/SrMdWnIXt6pBvJe69eiMKE6p3Zr5bsahzFNb6NUdUrno1rFtZlyeLVVgnnpnyg
-# YvNwXEaEkjbajPCjzsF6X+1o7hX2alxlkATCL2RXcqRU/V6GyGb18FQ+CqW89Gur
-# p2gHZiEy+gOMVFOEq6C/VjWi8cwcOsdF4XJQwGtX0LaKQGr9x9cFs+OQVHyoyPBB
-# ydA1c1EoCYQy3y39q/NHTnuPkI6jjok2bjENmg==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgLobn4qMHaasej31GdLTyXWbXMhv
+# t8UfLtW7zKk5GKyzj4yjMFwroYYEF4E+uoF2Jv2PPjM3k7w9nNB62P7VHRMK66MY
+# 5iCsfYEAHGRmwhYoBLcNH9NrUvfKV2A5kcIlDjdWr83KHc7cGaAztsJrG7w7B8hx
+# sWM4ZoNe0GKIJM0u5cA85maI9OBE6gEyXpu+SD1uCdIfqRL1ToRww+wRlxkR9rWt
+# hxI5iLsv79A7Q5eLrm2NSe/eH99vGvhBXWm7ZGvsITAJGWW/ToU4u4ZyroGs6l3Q
+# MDgdbi1iKjBrclPo+scwjZjaeUcuSVmvf5EDx8yiZJJdhk0B7cgyzFg4xzgiZYFG
+# 0IzHC9Ve9y6ihhMwhbdBmu4rM4Q4NTVWf4hr7y4neWFvCiX1iQ13+w/yAphc2GPr
+# A4QPdZZvc+Kr8HLN9MEpTmO7B03yX98MLpPdapVMHdKnNgKGULDeYjEXIFBJmtz4
+# VpQW4xMZ9+Fg3vcfrNAOVsFifKjnjh1Utpvzww==
 # SIG # End signature block
