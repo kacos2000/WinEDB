@@ -1,0 +1,47 @@
+0F-InvertedOnlyMD5,0-InvertedOnlyPids,11-System_FileName,13F-System_Size,14F-System_FileAttributes,15F-System_DateModified,16F-System_DateCreated,17F-System_DateAccessed,33-System_ItemUrl,3-System_ItemFolderNameDisplay,4165-System_ComputerName,4334-System_ContentType,4346-System_DateImported,4352-System_Document_DateCreated,4354-System_Document_DateSaved,4373-System_FileExtension,4377-System_FileOwner,4378-System_FilePlaceholderStatus,4384-System_FolderNameDisplay,4410-System_IsAttachment,4412-System_IsEncrypted,4415-System_IsFolder,4419-System_ItemDate,4421-System_ItemFolderPathDisplay,4422-System_ItemFolderPathDisplayNarrow,4423-System_ItemName,4424-System_ItemNameDisplay,4425-System_ItemNameDisplayWithoutExtension,4428-System_ItemPathDisplay,4429-System_ItemPathDisplayNarrow,4431-System_ItemType,4437-System_Kind,4438-System_KindText,4453-System_MIMEType,4540-System_NotUserContent,4546-System_ParsingName,4604-System_SFGAOFlags,4605-System_Search_AccessCount,4606-System_Search_AutoSummary,4612F-System_Search_GatherTime,4614-System_Search_LastIndexedTotalTime,4618-System_Search_Store,4655-System_ThumbnailCacheId,4679-System_VolumeId,5-System_ItemTypeText,WorkID
+"E88184A632BAD74383E0AC702480351E","140015124E126212","EpochConversionExample.zip","15933","Archive (32)","26/04/2018 15:35:22.6931799","26/04/2018 15:33:51.3334456","26/04/2018 15:35:22.6931799","file:C:/Users/maxpowers/Desktop/EpochConversionExample.zip","Desktop","DESKTOP-EDSLQM8","application/x-zip-compressed","26/04/2018 15:33:52.0000000","26/04/2018 15:33:52.0000000","26/04/2018 15:35:22.6931799",".zip","DESKTOP-EDSLQM8\maxpowers","6","EpochConversionExample","False","False","False","26/04/2018 15:33:52.0000000","C:\Users\maxpowers\Desktop","Desktop (C:\Users\maxpowers)","EpochConversionExample.zip","EpochConversionExample.zip","EpochConversionExample","C:\Users\maxpowers\Desktop\EpochConversionExample.zip","EpochConversionExample (C:\Users\maxpowers\Desktop)",".zip","folder","Folder","application/x-zip-compressed","False","EpochConversionExample.zip","1749025143","0","Sheet1
+If epoch is 1970, and the timestamp within the database has the same format as above, use the following formula to convert:
+=((((B2/60)/60)/24))+DATE(1970,1,1)
+
+EXAMPLE:
+Unix epoch time
+Human Readable Timestamp
+1524690657.00
+4/25/2018 9:10:57 PM
+60.00
+60.00
+24.00
+1970.00
+1.00
+1.00
+","26/04/2018 15:35:24.5993088","0,015625","file","C541502EB521F3BE","804cb650-0000-0000-0000-501f00000000","Compressed (zipped) Folder","2326"
+"65C973C92317CEF651C73C9705104D9F","140015124E126212","webbrowserpassview.zip","240913","Archive (32)","26/04/2018 18:45:18.0188081","26/04/2018 18:45:16.9270221","26/04/2018 18:45:16.9270221","file:C:/Users/maxpowers/Downloads/webbrowserpassview.zip","Downloads","DESKTOP-EDSLQM8","application/x-zip-compressed","26/04/2018 18:45:18.0000000","26/04/2018 18:45:18.0000000","26/04/2018 18:45:18.0188081",".zip","DESKTOP-EDSLQM8\maxpowers","6","webbrowserpassview","False","False","False","26/04/2018 18:45:18.0000000","C:\Users\maxpowers\Downloads","Downloads (C:\Users\maxpowers)","webbrowserpassview.zip","webbrowserpassview.zip","webbrowserpassview","C:\Users\maxpowers\Downloads\webbrowserpassview.zip","webbrowserpassview (C:\Users\maxpowers\Downloads)",".zip","folder","Folder","application/x-zip-compressed","False","webbrowserpassview.zip","1749025143","0","WebBrowserPassView v1.86
+Copyright (c) 2011 - 2017 Nir Sofer
+Web site: http://www.nirsoft.net
+
+
+
+Description
+===========
+
+WebBrowserPassView is a password recovery tool that reveals the passwords
+stored by the following Web browsers: Internet Explorer (Version 4.0 -
+11.0), Mozilla Firefox (All Versions), Google Chrome, Safari, and Opera.
+This tool can be used to recover your lost/forgotten password of any
+Website, including popular Web sites, like Facebook, Yahoo, Google, and
+GMail, as long as the password is stored by your Web Browser.
+
+After retrieving your lost passwords, you can save them into
+text/html/csv/xml file, by using the 'Save Selected Items' option
+(Ctrl+S).
+
+
+
+System Requirements And Limitations
+===================================
+
+
+* This utility works on any version of Windows, starting from Windows
+  2000, and up to Windows 10, including 64-bit systems. Older versions of
+  Windows (Windows 98/ME) are not supported, because this utility is a
+  Unicode application.","26/04/2018 18:45:19.4455615","0,03125","file","E93995A48C63C365","804cb650-0000-0000-0000-501f00000000","Compressed (zipped) Folder","3571"

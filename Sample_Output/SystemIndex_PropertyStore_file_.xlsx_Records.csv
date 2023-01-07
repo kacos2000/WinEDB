@@ -1,0 +1,197 @@
+0F-InvertedOnlyMD5,0-InvertedOnlyPids,11-System_FileName,13F-System_Size,14F-System_FileAttributes,15F-System_DateModified,16F-System_DateCreated,17F-System_DateAccessed,33-System_ItemUrl,3-System_ItemFolderNameDisplay,4129-System_ApplicationName,4165-System_ComputerName,4334-System_ContentType,4346-System_DateImported,4352-System_Document_DateCreated,4354-System_Document_DateSaved,4373-System_FileExtension,4377-System_FileOwner,4378-System_FilePlaceholderStatus,4410-System_IsAttachment,4412-System_IsEncrypted,4415-System_IsFolder,4419-System_ItemDate,4421-System_ItemFolderPathDisplay,4422-System_ItemFolderPathDisplayNarrow,4423-System_ItemName,4424-System_ItemNameDisplay,4425-System_ItemNameDisplayWithoutExtension,4428-System_ItemPathDisplay,4429-System_ItemPathDisplayNarrow,4431-System_ItemType,4437-System_Kind,4438-System_KindText,4453-System_MIMEType,4540-System_NotUserContent,4546-System_ParsingName,4604-System_SFGAOFlags,4605-System_Search_AccessCount,4606-System_Search_AutoSummary,4612F-System_Search_GatherTime,4614-System_Search_LastIndexedTotalTime,4618-System_Search_Store,4655-System_ThumbnailCacheId,4679-System_VolumeId,5-System_ItemTypeText,WorkID
+"379E50B7EFFA473F6C9098B0246C59A5","140015124E125712","Report1.xlsx","50517","Archive (32)","12/03/2018 23:59:46.0563353","12/03/2018 23:59:45.9781399","12/03/2018 23:59:45.9781399","file:C:/Users/maxpowers/Desktop/testing/projecte-r/Report1.xlsx","projecte-r","Microsoft Excel","DESKTOP-EDSLQM8","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","12/03/2018 23:59:46.0000000","12/03/2018 23:59:45.0000000","12/03/2018 23:59:45.0000000",".xlsx","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","12/03/2018 23:59:45.0000000","C:\Users\maxpowers\Desktop\testing\projecte-r","projecte-r (C:\Users\maxpowers\Desktop\testing)","Report1.xlsx","Report1.xlsx","Report1","C:\Users\maxpowers\Desktop\testing\projecte-r\Report1.xlsx","Report1 (C:\Users\maxpowers\Desktop\testing\projecte-r)",".xlsx","document","Document","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","False","Report1.xlsx","1077936503","0","37
+1332
+ 37
+1332
+ 4321
+1298
+ 4321
+1298
+ 4321
+1297
+ 4321
+1297
+ 4321
+1296
+ 4321
+1296
+ 4321
+1294
+ 4321
+1294
+ 4321
+1259
+ 4321
+1259
+ 4321
+1256
+ 4321
+1256
+ 4321
+1257
+ 4321
+1257
+ 4321
+1250
+ 4321
+1250
+ 5157
+33843840
+ 5157
+33843840
+ 5157
+33837414
+ 5157
+33837414
+ 5152
+33837413
+ 5152
+33837413
+ 5157
+33836463
+ 5157
+33836463
+ 5152
+33836462
+ 5152
+33836462
+ 5157
+33834616
+ 5157
+33834616
+ 5152
+33834615
+ 5152
+33834615
+ 5157
+33832167
+ 5157
+33832167
+ 5152
+33832166
+ 5152
+33832166
+ 5157
+33831320
+ 5157
+33831320
+ 5152
+33831319
+ 5152
+33831319
+ 5157
+33830690
+ 5157
+33830690
+ 5152
+33830689
+ 5152
+33830689
+ 5157
+33829054
+ 5157
+33829054
+ 5152
+33829053
+ 5152
+33829053
+ 5157
+33826609
+ 5157
+33826609
+ 5152
+33826608
+ 5152
+33826608
+ 5157
+33826306
+ 5157
+33826306
+ 5152
+33826305
+ 5152
+33826305
+ 5157
+33825030
+ 5157
+33825030
+ 5152
+33825029
+ 5152
+33825029
+ 5157
+33824969
+ 5157
+33824969
+ 5152
+33824968
+ 5152
+33824968
+ 5157
+33824958
+ 5157
+33824958
+ 5152
+33824957
+ 5152
+33824957
+ 5157
+33824599
+ 5157
+33824599
+ 5152
+33824598
+ 5152
+33824598
+ 5157
+33824364
+ 5157
+","13/03/2018 18:17:26.0223156","0,171875","file","D28AC33D8ECC1B3C","804cb650-0000-0000-0000-501f00000000","Microsoft Excel Worksheet","106"
+"FA06A7FEBD7E71E6565671B4C4FBF399","140015124E125712","Report2.xlsx","5807","Archive (32)","12/03/2018 23:59:47.0875398","12/03/2018 23:59:47.0406719","12/03/2018 23:59:47.0406719","file:C:/Users/maxpowers/Desktop/testing/projecte-r/Report2.xlsx","projecte-r","Microsoft Excel","DESKTOP-EDSLQM8","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","12/03/2018 23:59:47.0875398","12/03/2018 23:59:46.0000000","12/03/2018 23:59:46.0000000",".xlsx","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","12/03/2018 23:59:46.0000000","C:\Users\maxpowers\Desktop\testing\projecte-r","projecte-r (C:\Users\maxpowers\Desktop\testing)","Report2.xlsx","Report2.xlsx","Report2","C:\Users\maxpowers\Desktop\testing\projecte-r\Report2.xlsx","Report2 (C:\Users\maxpowers\Desktop\testing\projecte-r)",".xlsx","document","Document","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","False","Report2.xlsx","1077936503","0","No records returned for query
+Query: SELECT
+  winevent.written_time AS ""Time"",
+  winevent.event_identifier AS ""EventID"",
+  winevent.computer_name AS ""Computer"",
+CASE
+	WHEN (event_identifier IN (1003))
+		THEN json_extract(we_jrec,'$.UserData.UMDFDriverManagerHostCreateStart.DeviceInstanceId.#text')
+	WHEN (event_identifier IN (2003))
+		THEN json_extract(we_jrec,'$.UserData.UMDFHostAddDeviceBegin.instance')
+	WHEN (event_identifier IN (2003))
+		THEN json_extract(we_jrec,'$.UserData.UMDFHostAddDeviceBegin.instance')
+	WHEN (event_identifier IN (2005))
+		THEN json_extract(we_jrec,'$.UserData.UMDFHostModuleLoad.instance')
+	WHEN (event_identifier IN (2006))
+		THEN json_extract(we_jrec,'$.UserData.UMDFHostAddDeviceEnd.instance')
+	WHEN (event_identifier IN (2010))
+		THEN json_extract(we_jrec,'$.UserData.UMDFHostDeviceArrivalEnd.instance')
+	WHEN (event_identifier IN (2100,2101,2102,2105,2106))
+		THEN json_extract(we_jrec,'$.UserData.UMDFHostDeviceRequest.instance')
+	WHEN (event_identifier IN (10000))
+		THEN json_extract(","13/03/2018 18:17:25.7880914","0,046875","file","838A56C6FF063E11","804cb650-0000-0000-0000-501f00000000","Microsoft Excel Worksheet","107"
+"54D24FC10F7B7AE33A1D77555814856F","140015124E125712","Report3.xlsx","5662","Archive (32)","12/03/2018 23:59:47.9469024","12/03/2018 23:59:47.9312200","12/03/2018 23:59:47.9312200","file:C:/Users/maxpowers/Desktop/testing/projecte-r/Report3.xlsx","projecte-r","Microsoft Excel","DESKTOP-EDSLQM8","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","12/03/2018 23:59:47.9469024","12/03/2018 23:59:47.0000000","12/03/2018 23:59:47.0000000",".xlsx","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","12/03/2018 23:59:47.0000000","C:\Users\maxpowers\Desktop\testing\projecte-r","projecte-r (C:\Users\maxpowers\Desktop\testing)","Report3.xlsx","Report3.xlsx","Report3","C:\Users\maxpowers\Desktop\testing\projecte-r\Report3.xlsx","Report3 (C:\Users\maxpowers\Desktop\testing\projecte-r)",".xlsx","document","Document","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","False","Report3.xlsx","1077936503","0","No records returned for query
+Query: SELECT
+  winevent.written_time AS ""Time"",
+  winevent.event_identifier AS ""EventID"",
+  winevent.we_description AS ""Description"",
+CASE
+  WHEN event_identifier == 4624
+    THEN json_extract(we_jrec,'$.EventData.Data[5].#text')
+  WHEN event_identifier == 4634
+    THEN json_extract(we_jrec,'$.EventData.Data[1].#text')
+  WHEN event_identifier == 4648
+    THEN json_extract(we_jrec,'$.EventData.Data[5].#text') || ' -> ' ||
+	json_extract(we_jrec,'$.EventData.Data[1].#text')
+  ELSE '<Not Handled>'
+  END AS ""LogonID"",
+winevent.computer_name AS ""Computer"",
+/*winevent.xml_string AS ""XML"",*/
+winevent.source_name AS ""Channel"",
+winevent.we_source AS ""Source""
+FROM ""winevent""
+WHERE
+Channel == 'Microsoft-Windows-Security-Auditing' AND
+event_identifier IN (4624,4625,4634,4648)
+ORDER BY written_time;
+
+","13/03/2018 18:17:25.7256823","0,0625","file","5B894E0A36510AF8","804cb650-0000-0000-0000-501f00000000","Microsoft Excel Worksheet","108"

@@ -1,0 +1,17 @@
+0F-InvertedOnlyMD5,0-InvertedOnlyPids,11-System_FileName,13F-System_Size,14F-System_FileAttributes,15F-System_DateModified,16F-System_DateCreated,17F-System_DateAccessed,33-System_ItemUrl,3-System_ItemFolderNameDisplay,4129-System_ApplicationName,4136-System_Author,4165-System_ComputerName,4334-System_ContentType,4346-System_DateImported,4352-System_Document_DateCreated,4354-System_Document_DateSaved,4358-System_Document_LastAuthor,4373-System_FileExtension,4377-System_FileOwner,4378-System_FilePlaceholderStatus,4410-System_IsAttachment,4412-System_IsEncrypted,4415-System_IsFolder,4418-System_ItemAuthors,4419-System_ItemDate,4421-System_ItemFolderPathDisplay,4422-System_ItemFolderPathDisplayNarrow,4423-System_ItemName,4424-System_ItemNameDisplay,4425-System_ItemNameDisplayWithoutExtension,4427-System_ItemParticipants,4428-System_ItemPathDisplay,4429-System_ItemPathDisplayNarrow,4431-System_ItemType,4437-System_Kind,4438-System_KindText,4453-System_MIMEType,4540-System_NotUserContent,4546-System_ParsingName,4604-System_SFGAOFlags,4605-System_Search_AccessCount,4606-System_Search_AutoSummary,4612F-System_Search_GatherTime,4614-System_Search_LastIndexedTotalTime,4618-System_Search_Store,4655-System_ThumbnailCacheId,4679-System_VolumeId,5-System_ItemTypeText,WorkID
+"C2E34EC1376CBC7FEDCD16C3328135D1","140015124E125712","EpochConversionExample.xls","44032","Archive (32)","25/04/2018 21:14:21.0012887","24/04/2018 21:34:50.0000000","25/04/2018 21:14:20.8449875","file:C:/Users/maxpowers/Desktop/EpochConversionExample/EpochConversionExample.xls","EpochConversionExample","Microsoft Excel","offsec","DESKTOP-EDSLQM8","application/vnd.ms-excel","24/04/2018 21:34:50.0000000","24/04/2018 15:03:37.0000000","25/04/2018 21:14:20.0000000","Administrator",".xls","DESKTOP-EDSLQM8\maxpowers","6","False","False","False","offsec","25/04/2018 21:14:20.0000000","C:\Users\maxpowers\Desktop\EpochConversionExample","EpochConversionExample (C:\Users\maxpowers\Desktop)","EpochConversionExample.xls","EpochConversionExample.xls","EpochConversionExample","offsec","C:\Users\maxpowers\Desktop\EpochConversionExample\EpochConversionExample.xls","EpochConversionExample (C:\Users\maxpowers\Desktop\EpochConversionExample)",".xls","document","Document","application/vnd.ms-excel","False","EpochConversionExample.xls","1212154231","0","Sheet1
+If epoch is 1970, and the timestamp within the database has the same format as above, use the following formula to convert:
+=((((B2/60)/60)/24))+DATE(1970,1,1)
+
+EXAMPLE:
+Unix epoch time
+Human Readable Timestamp
+1524690657.00
+4/25/2018 9:10:57 PM
+60.00
+60.00
+24.00
+1970.00
+1.00
+1.00
+","26/04/2018 16:04:18.0482649","0,078125","file","F24F076A895B4015","804cb650-0000-0000-0000-501f00000000","Microsoft Excel 97-2003 Worksheet","2409"
