@@ -11,8 +11,8 @@ GUI:
    ![image](https://user-images.githubusercontent.com/11378310/209396112-17cb7093-324c-43c6-892e-f2447ac0fdc5.png)
 
 Command line:<br>
-==> [WindowsEDB-to-CSV.ps1](https://github.com/kacos2000/WinEDB/blob/master/WindowsEDB-to-CSV.ps1)<br>
-==> [WindowsEDB-to-CSV.exe](https://github.com/kacos2000/WinEDB/blob/master/WindowsEDB-to-CSV.exe)<br>
+==> [WindowsEDB-to-CSV.ps1](https://github.com/kacos2000/WinEDB/blob/master/WindowsEDB-to-CSV.ps1) <== <br>
+==> [WindowsEDB-to-CSV.exe](https://github.com/kacos2000/WinEDB/blob/master/WindowsEDB-to-CSV.exe) <== <br>
 
 Dependencies: 
 - [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48)
