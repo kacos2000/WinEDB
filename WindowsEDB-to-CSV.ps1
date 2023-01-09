@@ -121,30 +121,7 @@ function Copy-DB
 }
 
 # https://learn.microsoft.com/en-us/dotnet/api/system.io.fileattributes?view=net-7.0
-# Full list:
-#
-# Hex       	Dec	Binary	Description
-# '00000001'	'1'	'0000-0000-0000-0000-0000-0000-0000-0001'	ReadOnly
-# '00000002'	'2'	'0000-0000-0000-0000-0000-0000-0000-0010'	Hidden
-# '00000004'	'4'	'0000-0000-0000-0000-0000-0000-0000-0100'	System
-# '00000010'	'16'	'0000-0000-0000-0000-0000-0000-0001-0000'	Directory
-# '00000020'	'32'	'0000-0000-0000-0000-0000-0000-0010-0000'	Archive
-# '00000040'	'64'	'0000-0000-0000-0000-0000-0000-0100-0000'	Device
-# '00000080'	'128'	'0000-0000-0000-0000-0000-0000-1000-0000'	Normal
-# '00000100'	'256'	'0000-0000-0000-0000-0000-0001-0000-0000'	Temporary
-# '00000200'	'512'	'0000-0000-0000-0000-0000-0010-0000-0000'	Sparse_File
-# '00000400'	'1024'	'0000-0000-0000-0000-0000-0100-0000-0000'	Reparse_Point
-# '00000800'	'2048'	'0000-0000-0000-0000-0000-1000-0000-0000'	Compressed
-# '00001000'	'4096'	'0000-0000-0000-0000-0001-0000-0000-0000'	Offline
-# '00002000'	'8192'	'0000-0000-0000-0000-0010-0000-0000-0000'	Not_Content_Indexed
-# '00004000'	'16384'	'0000-0000-0000-0000-0100-0000-0000-0000'	Encrypted
-# '00008000'	'32768'	'0000-0000-0000-0000-1000-0000-0000-0000'	Integrity Stream
-# '00010000'	'65536'	'0000-0000-0000-0001-0000-0000-0000-0000'	Virtual
-# '00020000'	'131072'	'0000-0000-0000-0010-0000-0000-0000-0000'	No_Scrub_Data
-# '00040000'	'262144'	'0000-0000-0000-0100-0000-0000-0000-0000'	Recall_On_Open
-# '00400000'	'4194304'	'0000-0000-0100-0000-0000-0000-0000-0000'	Recall_On_DataAccess
-# '80000000'	'2147483648'	'1000-0000-0000-0000-0000-0000-0000-0000'	TxF flag (Transaction related (?)
-
+# https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants 
 $FileAttributesEnum = [Ordered]@{
 	'1'		     = 'ReadOnly'
 	'2'		     = 'Hidden'
@@ -163,7 +140,9 @@ $FileAttributesEnum = [Ordered]@{
 	'32768'	     = 'Integrity_Stream'
 	'65536'	     = 'Virtual'
 	'131072'	 = 'No_Scrub_Data'
+	'524288'	 = 'Pinned'
 	'262144'	 = 'Recall_On_Open'
+	'1048576'    = 'Unpinned'
 	'4194304'    = 'Recall_On_DataAccess'
 	'2147483648' = 'TxF_flag'
 }
@@ -221,19 +200,13 @@ $dates = @(
 	'DateLastUsed'
 	'StartDate'
 	'EndTime'
-	'LocalEndTime'
-	'LocalStartTime'
 	'StartTime'
 	'ReminderTime'
-	'DateItemExpires'
 	'Anniversary'
 	'Birthday'
 	'DueDate'
 	'EndDate'
 	'GPS_Date'
-	'DateVisited'
-	'DateEncoded'
-	'DateContentExpires'
 	'OriginalBroadcastDate'
 	'RecordingTime'
 	'CreationTime'
@@ -244,17 +217,23 @@ $dates = @(
 	'ExpirationTime'
 	'LastChangeTime'
 	'DownloadDateExpire'
-	'DownloadDateExpireOverride'
+)
+
+$DatesAsInt64 = @(
+	'AccessedTime'
+	'CreationTime'
+	'ExpiryTime'
+	'ModifiedTime'
+	'PostCheckTime'
+	'SyncTime'
 )
 
 $unicodeAsLongBinary = @(
 	'LocaleName'
-	'ItemAuthors'
 	'Address'
 	'Name'
 	'Author'
 	'Addresses'
-	'Names'
 	'Resources'
 	'Category'
 	'ItemParticipants'
@@ -305,6 +284,7 @@ $sizes = @(
 $szlist = $sizes -join '|'
 $tlist = $timespans -join '|'
 $dlist = $dates -join '|'
+$d2list = $DatesAsInt64 -join '|'
 $ulist = $unicodeAsLongBinary -join '|'
 
 function Get-EDBcolumnData
@@ -327,17 +307,28 @@ function Get-EDBcolumnData
 			'Long' { [Bitconverter]::ToInt32($Binarydata, 0) ; break }
 			'17' { [Bitconverter]::ToUInt16($Binarydata, 0) ; break }
 			'14' { [Bitconverter]::ToUInt32($Binarydata, 0) ; break }
-			'15' { [Bitconverter]::ToInt64($Binarydata, 0) ; break }
+			'15' { 	$int64value = [Bitconverter]::ToInt64($Binarydata, 0)
+				if ($column.name -match $d2list -and $column.name -notmatch '^[\d]{2}')
+				{
+					try { [datetime]::FromFileTimeUtc($int64value).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+					catch{ $int64value}
+				}
+				else { $int64value; break}
+			}
 			'Bit'{ [Bitconverter]::ToBoolean($Binarydata, 0) ; break }
 			'Short'{ [Bitconverter]::ToInt16($Binarydata, 0) ; break }
 			'UnsignedByte'{ $Binarydata ; break }
-			'LongText'{	[System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata); break }
+			'LongText'{ if ($null -ne $column.Cp)
+				{
+					[System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata); break
+				} else { [System.Text.Encoding]::Unicode.GetString($Binarydata); break}
+			}
 			'Binary'{
 				switch ($column.name)
 				{
-					{ $_ -eq 'LastModified' }
+					{ $_ -eq 'LastModified' -and $Column.MaxLength -eq 8}
 					{
-						try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString($Binarydata).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+						try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString($Binarydata).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break } # Big Endian
 						catch [System.Management.Automation.MethodInvocationException] { }
 						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 					}
@@ -346,9 +337,15 @@ function Get-EDBcolumnData
 						try { [Bitconverter]::ToUInt64($Binarydata, 0) ; break }
 						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 					}
-					{ $_ -match $dlist }
+					{ $_ -match $dlist -and $_ -match '^[\d]{2}' -and $Column.MaxLength -eq 8 }
 					{
-						try { [datetime]::FromFileTimeUtc([Bitconverter]::ToUInt64($Binarydata, 0) ).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+						try { [datetime]::FromFileTimeUtc([Bitconverter]::ToUInt64($Binarydata, 0)).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break } # Little Endian
+						catch [System.Management.Automation.MethodInvocationException] {  } 
+						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break} 
+					}
+					{ $_ -match $dlist -and $_ -notmatch '^[\d]{2}' -and $Column.MaxLength -eq 8 }{
+						try { [datetime]::FromFileTimeUtc("0x$([System.BitConverter]::ToString($Binarydata).Replace('-', ''))").ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break } # Big Endian
+						catch [System.Management.Automation.MethodInvocationException] { }
 						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 					}
 					{ $_ -match $tlist }
@@ -366,21 +363,32 @@ function Get-EDBcolumnData
 						try { [Bitconverter]::ToUInt64($Binarydata, 0)  }
 						catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
 					}
+					{ $_ -match 'FileName1' }{ [System.Text.Encoding]::Unicode.GetString($Binarydata); break }
 					default { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 				}
 			}
 			'LongBinary'{
 				# Check the Name Column
-				if ($column.name -match $ulist)
+				if ($column.name -match $ulist -and $_ -match '^[\d]{2}')
 				{
 					try { [System.Text.Encoding]::Unicode.GetString($Binarydata) }
+					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
+					break
+				}
+				if ($column.name -match $ulist -and $_ -notmatch '^[\d]{2}')
+				{
+					try { [System.Text.Encoding]::UTF8.GetString($Binarydata) }
 					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
 					break
 				}
 				else { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
 			}
 			'Text'{ [System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata); break }
-			'DateTime'{ [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+			'DateTime'{
+				try { [datetime]::FromFileTimeUtc([Bitconverter]::ToUInt64($Binarydata, 0)).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
+				catch [System.Management.Automation.MethodInvocationException] { [System.BitConverter]::ToString($Binarydata).Replace('-', ''); break }
+				catch { [Microsoft.Isam.Esent.Interop.Api]::RetrieveColumnAsDateTime($Session, $Table, $column.Columnid, [Microsoft.Isam.Esent.Interop.RetrieveColumnGrbit]::None); break }
+			}
 			'Currency'{ [Bitconverter]::ToInt64($Binarydata, 0) ; break }
 			'IEEESingle'{ [Bitconverter]::ToSingle($Binarydata, 0) ; break }
 			'IEEEDouble'{ [Bitconverter]::ToDouble($Binarydata, 0) ; break }
@@ -493,7 +501,7 @@ function Read-EDB
 	$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::SystemPath, 0, $syspath)
 	$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::LogFilePath, 0, $logpath)
 	$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::OutstandingIOMax, [int]32768, $null)
-	
+		
 	# Create Instance
 	[Microsoft.Isam.Esent.Interop.Api]::JetCreateInstance2([ref]$Instance, 'WindowsEDB-to-CSV', 'WindowsEDB-to-CSV', [Microsoft.Isam.Esent.Interop.CreateInstanceGrbit]::None)
 	
@@ -513,7 +521,7 @@ function Read-EDB
 	
 	# Begin Session
 	[Microsoft.Isam.Esent.Interop.Api]::JetBeginSession($Instance, [ref]$Session, [System.String]::Empty, [System.String]::Empty)
-	
+
 	try
 	{
 		$DatabaseId = [Microsoft.Isam.Esent.Interop.JET_DBID]::Nil
@@ -969,8 +977,13 @@ function Read-EDB
 				{
 					$data = Get-EDBcolumnData -Session $Session -Table $Table -Column $column
 					
-					# Convert FileAttributes from Int to human readable string
-			#		if ($column.name.ToString().contains('System_FileAttributes') -and $column.Coltyp.ToString() -eq '14' -and !!$FileAttributesEnum["$($data)"]) { $data = $FileAttributesEnum["$($data)"] + " ($($data))" }
+					# Convert FileAttributes from Int to human readable string (-band ?))
+					$attr = [System.Collections.ArrayList]@()
+					if ($column.name -match 'System_FileAttributes' -and $null -ne $data)
+					{
+						$FileAttributesEnum.GetEnumerator().foreach{ if (($data -band $_.key) -eq $_.key) { $null = $attr.Add($FileAttributesEnum[$_.key]) } }
+						$data = "$($attr -join ', ')" + " ($($data))"
+					}
 					
 					# Add column data to psobject
 					if (![string]::IsNullOrEmpty($data) -and ![string]::IsNullOrWhiteSpace($data))
@@ -1963,8 +1976,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBhhdM73DWHA7Bn
-# 0nt+0cyf2OJB3ZTLhIl2toROOwF/rqCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCy3VENEw7mJDU9
+# IOrjy768vxLfv+oRBX9C25fd2v9ZYKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2184,35 +2197,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIN/RJNX+Y0BBFODn/e4Yx1UNxEbNSo51
-# nsb4hqZH/Y+uMA0GCSqGSIb3DQEBAQUABIICAIAYiVEe3UFH/qugerzv5SB+6V4r
-# e/MNbm8OlupUE2ju12GuhhM35tW3E3Z1qxxBPvy8b0UhUsnYehAgVIznsV8BOMde
-# KPWsAB8vEn4N8w0820U/b3FuETKKcNE/YueFRJKkmYUzg38pCK4CP58Jz8lnyAfN
-# AcRp4YmNs7O756lvKvfjl9onlBWLy3Ju7DzLkRfL6k25W3yqTKlhg/OFPdSTVivy
-# wBY2P3z3PWl8Gf+h/NC8RxIuQnp+lZLJDpDYa726itHyKTeenPjtTMxEHWYldNTp
-# b53MdEgLhQvrpMN8RSRp6ClUKIT89lTjHWZdHJrOKwb/Wm2gFTWoVk8+lP80mJbC
-# CJ12j7qaqtvndS7OJHio0XtnK/UQhoZHh6yq0IvRzS2NaaqH6Aubog24Ycxh7xMe
-# 3ElujP8Yd1BtFXMjhgQpCcoTuSjKzPSnQkN5Zz6S/QaCVtUajqX2x2KtPtZZn0Cd
-# iKWzPhv88lkODPDi8kID0oNCyD3LlLTgHkZaC7+P4cvxc8iSx5wwU8UsvcGyXf6z
-# Vpd77yPDdgUfikOeLAzg9gOqwdgVw+2qt5UQOdDbJuvFeSqx7aLFywg4FCxnPdEv
-# VsgGfEPCJg1C7lGWMdUgcWT/+7jjwTQly1pXdpuRqFBslArFUyEa/lda+pRhBxzT
-# UwDXsie7HRdWzEBBoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIHuq4iNxz4m9TtQMSIMvjDzzgvnenQsQ
+# Jd9TYFwTcDpxMA0GCSqGSIb3DQEBAQUABIICADjJQsItr2rI0hATWGFdeBwF8jhx
+# PSOMVIy9i/pk5D9Vps5k7qz2nISgTskW9poJf0IUlggONmnd6YsqWmNt2Zi4bh6c
+# dNax2aP2GecyIviP9c61Gulz2BFb2xLr8cL9A19SGINRymI0eEYORxsqbiPGfRdV
+# r/zl6ouBK5s/5W5oGJQF3XzXTEKlVBwc/3JGJrsy0T20El+pWtSUrljL09ZwFmoi
+# lXu/rhAFdTdto3U9a7FtDvgtrgjfC6eNznmQjoQVveex1am3i1I0DNSuBfcbYf0F
+# 5BXbunJqDUCs71jU/+pIhooyyC13RZu+g0irysuKIFARwDQJGAkg1fJLqiT8s30z
+# Kdua7pt7SdsxfBDcpQVPivuOmMxFz0qOWhXXXRGTdlvw8c6XDQ8gxYRk6FP8NAGA
+# YOmEu4MhujaUDwa1uNpc64Ku4Y6BR35FPQkgXyXg5BD5KKHhcM85R9ZiEpmSYZ9V
+# I0NYMWZ+9pr7zZLigbQD6srLtqjoK89xXBJv4XBXDVIUQHgG+s6FjbxElUigmCrE
+# UoJrPR8QOJ8mqaShaNC71KUpuLCYB/pKXiDG6U0He1rnuFJf4M4qXbH0SHQ7PkXA
+# rSo6Yw72AcgrZkcmZzLcx8sQfJKPdMuFYluxLt0+LmLpv6PElo5H0sjo8HV/CpUw
+# nj7sOfCIjId+qSOSoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDcxNDQxMzhaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDkxMjI0MThaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCB29Nb8HnbWFwIthBcbCxzncenefI1cxtqdqT5px36SzjCBpAYLKoZIhvcNAQkQ
+# BCABl4wONTjN0ElAPBDwjTwlM/tR1NCYdY/5S1xE+ojaWjCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgLobn4qMHaasej31GdLTyXWbXMhv
-# t8UfLtW7zKk5GKyzj4yjMFwroYYEF4E+uoF2Jv2PPjM3k7w9nNB62P7VHRMK66MY
-# 5iCsfYEAHGRmwhYoBLcNH9NrUvfKV2A5kcIlDjdWr83KHc7cGaAztsJrG7w7B8hx
-# sWM4ZoNe0GKIJM0u5cA85maI9OBE6gEyXpu+SD1uCdIfqRL1ToRww+wRlxkR9rWt
-# hxI5iLsv79A7Q5eLrm2NSe/eH99vGvhBXWm7ZGvsITAJGWW/ToU4u4ZyroGs6l3Q
-# MDgdbi1iKjBrclPo+scwjZjaeUcuSVmvf5EDx8yiZJJdhk0B7cgyzFg4xzgiZYFG
-# 0IzHC9Ve9y6ihhMwhbdBmu4rM4Q4NTVWf4hr7y4neWFvCiX1iQ13+w/yAphc2GPr
-# A4QPdZZvc+Kr8HLN9MEpTmO7B03yX98MLpPdapVMHdKnNgKGULDeYjEXIFBJmtz4
-# VpQW4xMZ9+Fg3vcfrNAOVsFifKjnjh1Utpvzww==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgL/IdGxSk1kD2n8BVqSCcgFLxExa
+# rDx4jjEFtDOaF6DJV42pGzwEyqPy/ow6AHStZx9dMvZ+fyEsBHq7ztbUZJUcanK8
+# CrkECkT6FZbgCxbbNpXl74OhEuOqe4UKLh6SV8Dmye2D9EX1K3qU5LLSA7tn+j7d
+# qoeO7yallCOlHLbFoi4eXKcc6Zq0I4ZYQvAV8xCDIdqz25cFRtxE2AxOvktCjo1S
+# eJ7lN/KCnYOtE9CYaAoji4c1vje8G4AC+9hgTnxmHIuq1xyGCFOAxZblD5ngeTBW
+# bp5U67ekO2ZsWL28q7taILZD5DpJ1DUzmLQGuPtINRqXQrW3gioqDTUWR+wVqnZF
+# eAp3zk5LPKHXLjqXMyda8eluNtWw1ypQvkhDk9pSLQ3F4pqXV9/DZk0Rq74hXBFg
+# /r2gGPqvh33wdP6CpJXJsEXn16D7ReFHnL7sufSwqFsCZQHv73M/ryVWYl+Psvic
+# MAohnps9hzLdeQ4HQhNT4aZewy0po/J0/WF1dQ==
 # SIG # End signature block
