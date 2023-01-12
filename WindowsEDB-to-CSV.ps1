@@ -180,52 +180,19 @@ $ColumnTypes = [System.Collections.Hashtable]@{
 	'18' = 'Max' # A constant describing the maximum (that is, one beyond the largest valid) column type supported by the engine
 }
 
+# Columns set as Binary (8-bytes) that are actually Filetime
 $dates = @(
-	'DateModified'
-	'DateCreated'
-	'DateAccessed'
-	'DateAcquired'
-	'DateArchived'
-	'DateCompleted'
-	'DateImported'
-	'DatePrinted'
-	'DateSaved'
-	'ItemDate'
-	'DateVisited'
-	'DateEncoded'
-	'DateReceived'
-	'DateSent'
-	'DateTaken'
-	'GatherTime'
-	'DateLastUsed'
-	'StartDate'
-	'EndTime'
-	'StartTime'
-	'ReminderTime'
+	'Date'
+	'Time'
 	'Anniversary'
 	'Birthday'
-	'DueDate'
-	'EndDate'
-	'GPS_Date'
-	'OriginalBroadcastDate'
-	'RecordingTime'
-	'CreationTime'
-	'ExpireDate'
 	'Modified'
 	'IssueDate'
 	'Expires'
-	'ExpirationTime'
-	'LastChangeTime'
-	'DownloadDateExpire'
 )
 
 $DatesAsInt64 = @(
-	'AccessedTime'
-	'CreationTime'
-	'ExpiryTime'
-	'ModifiedTime'
-	'PostCheckTime'
-	'SyncTime'
+	'Time'
 )
 
 $unicodeAsLongBinary = @(
@@ -267,6 +234,7 @@ $unicodeAsLongBinary = @(
 	'EncryptionOwners'
 	'StorageProviderShareStatuses'
 	'Supplemental_Tag'
+	'Message_ToName'
 )
 
 $timespans = @(
@@ -307,18 +275,12 @@ function Get-EDBcolumnData
 			'Long' { [Bitconverter]::ToInt32($Binarydata, 0) ; break }
 			'17' { [Bitconverter]::ToUInt16($Binarydata, 0) ; break }
 			'14' { [Bitconverter]::ToUInt32($Binarydata, 0) ; break }
-			'15' { 	$int64value = [Bitconverter]::ToInt64($Binarydata, 0)
-				if ($column.name -match $d2list -and $column.name -notmatch '^[\d]{2}')
-				{
-					try { [datetime]::FromFileTimeUtc($int64value).ToString("dd/MM/yyyy HH:mm:ss.fffffff"); break }
-					catch{ $int64value}
-				}
-				else { $int64value; break}
-			}
+			'15' { [Bitconverter]::ToInt64($Binarydata, 0); break }
 			'Bit'{ [Bitconverter]::ToBoolean($Binarydata, 0) ; break }
 			'Short'{ [Bitconverter]::ToInt16($Binarydata, 0) ; break }
 			'UnsignedByte'{ $Binarydata ; break }
-			'LongText'{ if ($null -ne $column.Cp)
+			'LongText'{
+				if ($null -ne $column.Cp)
 				{
 					[System.Text.Encoding]::GetEncoding("$($column.Cp)").GetString($Binarydata); break
 				} else { [System.Text.Encoding]::Unicode.GetString($Binarydata); break}
@@ -375,7 +337,7 @@ function Get-EDBcolumnData
 					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
 					break
 				}
-				if ($column.name -match $ulist -and $_ -notmatch '^[\d]{2}')
+				elseif ($column.name -match $ulist -and $_ -notmatch '^[\d]{2}')
 				{
 					try { [System.Text.Encoding]::UTF8.GetString($Binarydata) }
 					catch { [System.BitConverter]::ToString($Binarydata).Replace('-', '') }
@@ -1976,8 +1938,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCy3VENEw7mJDU9
-# IOrjy768vxLfv+oRBX9C25fd2v9ZYKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDwMElhVDsIcdFJ
+# /FLwO0Qqu+A5jzUnGUEsiI0zNJm7UaCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2197,35 +2159,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIHuq4iNxz4m9TtQMSIMvjDzzgvnenQsQ
-# Jd9TYFwTcDpxMA0GCSqGSIb3DQEBAQUABIICADjJQsItr2rI0hATWGFdeBwF8jhx
-# PSOMVIy9i/pk5D9Vps5k7qz2nISgTskW9poJf0IUlggONmnd6YsqWmNt2Zi4bh6c
-# dNax2aP2GecyIviP9c61Gulz2BFb2xLr8cL9A19SGINRymI0eEYORxsqbiPGfRdV
-# r/zl6ouBK5s/5W5oGJQF3XzXTEKlVBwc/3JGJrsy0T20El+pWtSUrljL09ZwFmoi
-# lXu/rhAFdTdto3U9a7FtDvgtrgjfC6eNznmQjoQVveex1am3i1I0DNSuBfcbYf0F
-# 5BXbunJqDUCs71jU/+pIhooyyC13RZu+g0irysuKIFARwDQJGAkg1fJLqiT8s30z
-# Kdua7pt7SdsxfBDcpQVPivuOmMxFz0qOWhXXXRGTdlvw8c6XDQ8gxYRk6FP8NAGA
-# YOmEu4MhujaUDwa1uNpc64Ku4Y6BR35FPQkgXyXg5BD5KKHhcM85R9ZiEpmSYZ9V
-# I0NYMWZ+9pr7zZLigbQD6srLtqjoK89xXBJv4XBXDVIUQHgG+s6FjbxElUigmCrE
-# UoJrPR8QOJ8mqaShaNC71KUpuLCYB/pKXiDG6U0He1rnuFJf4M4qXbH0SHQ7PkXA
-# rSo6Yw72AcgrZkcmZzLcx8sQfJKPdMuFYluxLt0+LmLpv6PElo5H0sjo8HV/CpUw
-# nj7sOfCIjId+qSOSoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEII5mL8JjPQu4s7m28mMrXat8TSRv7UvC
+# HlWGAgjq1HRXMA0GCSqGSIb3DQEBAQUABIICAAHaIhdRQPfwaoQMGy3sJBOW1AV0
+# seBpTQJv3UEOcY+hiraOmI91xStoUEF0Lm81vUwMsS8HxVVo2Ho9um+BpXRaVomR
+# p72gP0oCZXdaAmQd+ggeLlixGNqDsEDZj24w0xsTfgvJih1JE7957f2q7AnHBRxY
+# gNXmEWRmgzbCdwSMlX59Kx8F8X7omAX3MDwx91c2ZKPqMl1DPqvjqJZEV7cUPMA8
+# vBaJDpAt+gAIshMKN/Rdyl2YGSS6AcYB+ZL5tQBR4nXMK2tMLskiA65JOWs1Ztt8
+# ssujXqgIBcPKTAXdFf9UqLkPy0erqMPG6I8uMvXP4qSScNmDBtihxOEpxNUcY73w
+# 3yyTOPITFrxaFIzglV/vKFs5gM0Ze4324BgwUgIYjR6oNhKTR+MeL+WgU3c4Hrct
+# ro4F8WrcgHeSfADDbkOBwkqCgrn05hMd2AUOl4TKf6TjGCn3SYAuRshPwTYA4UNM
+# 6zMBlAPT6fUm6Ow2wfT1ze9ayLYLiRP6tlqgBVSHQ4M2xXwuo3tE25GfBVlBu8JL
+# IDLHtM2MxraSPJl3mndJ9ps3E8l1+V9iuTEquss2JYwfX344j7nZZbrnbNt9f0n2
+# bQutIILPSvymWIPUf6ND6W+LBH3B73hSxjutvxlzImn92DdIma3DMd1H164tPbQ8
+# ne89x1zEmVQ59rE6oYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMDkxMjI0MThaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMTIxMzQ1MDNaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCABl4wONTjN0ElAPBDwjTwlM/tR1NCYdY/5S1xE+ojaWjCBpAYLKoZIhvcNAQkQ
+# BCA29eWKnJ8R1KeZoLv60zBHo0rWBmU9mx1Y1YueIiRKHTCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgL/IdGxSk1kD2n8BVqSCcgFLxExa
-# rDx4jjEFtDOaF6DJV42pGzwEyqPy/ow6AHStZx9dMvZ+fyEsBHq7ztbUZJUcanK8
-# CrkECkT6FZbgCxbbNpXl74OhEuOqe4UKLh6SV8Dmye2D9EX1K3qU5LLSA7tn+j7d
-# qoeO7yallCOlHLbFoi4eXKcc6Zq0I4ZYQvAV8xCDIdqz25cFRtxE2AxOvktCjo1S
-# eJ7lN/KCnYOtE9CYaAoji4c1vje8G4AC+9hgTnxmHIuq1xyGCFOAxZblD5ngeTBW
-# bp5U67ekO2ZsWL28q7taILZD5DpJ1DUzmLQGuPtINRqXQrW3gioqDTUWR+wVqnZF
-# eAp3zk5LPKHXLjqXMyda8eluNtWw1ypQvkhDk9pSLQ3F4pqXV9/DZk0Rq74hXBFg
-# /r2gGPqvh33wdP6CpJXJsEXn16D7ReFHnL7sufSwqFsCZQHv73M/ryVWYl+Psvic
-# MAohnps9hzLdeQ4HQhNT4aZewy0po/J0/WF1dQ==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgHULOe+CCfSIRoCUtx+IXwqMyn1y
+# IrGzei/ddpo2XVFOvB7dpZxDIRN4gCpLKhjCpnE39ynCkO/DUPR9R1118/EfzX/O
+# t5PUhWJUFC7WtcTNAtewcccajvk7qNojOL83E6EOfqMU0JJwmUkJy9NyvtRsb9RV
+# uhOxT1myFkNJZgZnYkEP5LjGp38a1xs8IyBAwjuIgyJhOzRFDSoSeX8sRX9gzMJR
+# 77VTC9GMD1Q6zkNrbPCPl92JPSJorytiykFZNp38lwJzvgkCUL81qOPE7PBxybFt
+# xrizOxZcnj+Nme6LAfpK69AoXK+21O58s9qWDun87eKSFRCGUBC8x3EAjfAMOxSd
+# 4mjo6OR5xNqPX7zxQhvV3w5VIoLyVMaOqT87YYUKofqCMvBhrbSzwF7K/1irqgn7
+# L8HhK2k7WvZJdwVpt42LTzZedgmM7XUKyUrOe0pufXnHnGnp7/CBpLNQT4DxUAyi
+# /r42gWG6Eo+1LjrANqVDVb6fQyKjOoFK/jNZuw==
 # SIG # End signature block
