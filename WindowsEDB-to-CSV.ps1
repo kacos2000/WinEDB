@@ -3,7 +3,7 @@
 		Extracts table data from Windows EDB databases
 	
 	.DESCRIPTION
-		Extracts the table data & Table info  from Wiindows EDB databases,
+		Extracts the table data & Table info  from Windows EDB databases,
 		provided they were Shutdown properly, or repaired with Esentutl.exe.
 		If not, the script will stop & inform you (hopefully).
 		
@@ -25,8 +25,7 @@
 	
 	.NOTES
 		===========================================================================
-		Created on:   	15/12/2022 4:06 pm
-		Created by:   	Costas Katsavounidis MA, MSc, CFCE, CAWFE, ICMDE
+		Created by:   	Costas Katsavounidis MA, MSc, CFCE, CAWFE
 						https://github.com/kacos2000/WinEDB
 		Filename:       WindowsEDB-to-CSV.ps1
 		===========================================================================
@@ -35,7 +34,7 @@
 param
 (
 	[Parameter(ValueFromPipeline = $true,
-			   HelpMessage = 'Full Path od Database File')]
+			   HelpMessage = 'Full Path of Database File')]
 	$InputFile,
 	[Parameter(ValueFromPipeline = $true,
 			   HelpMessage = 'The Full Path a Directory to Export the CSVs')]
@@ -43,7 +42,7 @@ param
 )
 
 
-if ([System.String]::IsNullOrEmpty($Input))
+if ([System.String]::IsNullOrEmpty($InputFile))
 {
 	
 	$null = [System.Reflection.Assembly]::Load('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
@@ -235,6 +234,7 @@ $unicodeAsLongBinary = @(
 	'StorageProviderShareStatuses'
 	'Supplemental_Tag'
 	'Message_ToName'
+	'IdBlob'
 )
 
 $timespans = @(
@@ -1938,8 +1938,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDwMElhVDsIcdFJ
-# /FLwO0Qqu+A5jzUnGUEsiI0zNJm7UaCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA2GsbyuqQu2TQj
+# F6YKblDa+wOqlOqqP+IVUfUtWFrJOKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2159,35 +2159,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEII5mL8JjPQu4s7m28mMrXat8TSRv7UvC
-# HlWGAgjq1HRXMA0GCSqGSIb3DQEBAQUABIICAAHaIhdRQPfwaoQMGy3sJBOW1AV0
-# seBpTQJv3UEOcY+hiraOmI91xStoUEF0Lm81vUwMsS8HxVVo2Ho9um+BpXRaVomR
-# p72gP0oCZXdaAmQd+ggeLlixGNqDsEDZj24w0xsTfgvJih1JE7957f2q7AnHBRxY
-# gNXmEWRmgzbCdwSMlX59Kx8F8X7omAX3MDwx91c2ZKPqMl1DPqvjqJZEV7cUPMA8
-# vBaJDpAt+gAIshMKN/Rdyl2YGSS6AcYB+ZL5tQBR4nXMK2tMLskiA65JOWs1Ztt8
-# ssujXqgIBcPKTAXdFf9UqLkPy0erqMPG6I8uMvXP4qSScNmDBtihxOEpxNUcY73w
-# 3yyTOPITFrxaFIzglV/vKFs5gM0Ze4324BgwUgIYjR6oNhKTR+MeL+WgU3c4Hrct
-# ro4F8WrcgHeSfADDbkOBwkqCgrn05hMd2AUOl4TKf6TjGCn3SYAuRshPwTYA4UNM
-# 6zMBlAPT6fUm6Ow2wfT1ze9ayLYLiRP6tlqgBVSHQ4M2xXwuo3tE25GfBVlBu8JL
-# IDLHtM2MxraSPJl3mndJ9ps3E8l1+V9iuTEquss2JYwfX344j7nZZbrnbNt9f0n2
-# bQutIILPSvymWIPUf6ND6W+LBH3B73hSxjutvxlzImn92DdIma3DMd1H164tPbQ8
-# ne89x1zEmVQ59rE6oYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIAoYJIA2kSBIAxBeunxeySm2JIAAfGLE
+# nkrO8VVP5aaBMA0GCSqGSIb3DQEBAQUABIICAD8RxAw5sEmLVxAi8Yh/37fexYm0
+# gK8UtmPbEkZQIn28AwpAvW/4r/1nPXRXjvMcR+x0Wa8bqX2BcQ1W4GW/Xo30aJVZ
+# u3qXS2NMVh4G30hzVaekxnbNmzKZi4I4wjKdeM5JITiBuhKLPJ31FXlCaH493vvd
+# zJr819Ux+vN50R6klb2ohka7II0zavvyLp3CEvRrSXsoS/3kreNGrrBADVM+DuiP
+# i6+WyoxrZGlyVy2/lCg9sNFl/FYd4jpt9stmRnJJvrzrWBi2SBmviSs+LOIDk+4W
+# aMYaMBBKaDbKO/SkfIYwbtWnIf93tTkYeivqBEI1X4qjg3iEJeK7Y+yCgu1wzAs5
+# xeZPFYS4elLFNoJR75v7NGe36axVbgAD+/nn+0Zs9JfJeekOnhk9rhmT1DuwglY1
+# Pn5LR7m2KAB59TgGLVLvPqkJtg+8RM0rrbLbfR6fGXvI7cRiZ39852crVlkYZRLP
+# wpwv9UgLw6pBrP0jItLsMJViAqCumYpORnz5nxAW0Mq+mx6GHLfdxOKfqWWPn9Lz
+# yREEkTlpZ3j/RDE+fMqu0qpv4uiafHOelcXaq8RdgzVk97+Qi392EMAdNjKoFKFr
+# /v+mRWXhqzw6ZZl3VJZ/4KzbARBjkMSeIWykm8yyrS1mHt4/LkXScoypVmHFURTh
+# za/mHX2OfOQMCnaqoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMTIxMzQ1MDNaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMTgyMzI5MTFaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCA29eWKnJ8R1KeZoLv60zBHo0rWBmU9mx1Y1YueIiRKHTCBpAYLKoZIhvcNAQkQ
+# BCAluWO59M6K2zCr7T4sBEfNERMw3DrWvzna3/i04Q7ZIDCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgHULOe+CCfSIRoCUtx+IXwqMyn1y
-# IrGzei/ddpo2XVFOvB7dpZxDIRN4gCpLKhjCpnE39ynCkO/DUPR9R1118/EfzX/O
-# t5PUhWJUFC7WtcTNAtewcccajvk7qNojOL83E6EOfqMU0JJwmUkJy9NyvtRsb9RV
-# uhOxT1myFkNJZgZnYkEP5LjGp38a1xs8IyBAwjuIgyJhOzRFDSoSeX8sRX9gzMJR
-# 77VTC9GMD1Q6zkNrbPCPl92JPSJorytiykFZNp38lwJzvgkCUL81qOPE7PBxybFt
-# xrizOxZcnj+Nme6LAfpK69AoXK+21O58s9qWDun87eKSFRCGUBC8x3EAjfAMOxSd
-# 4mjo6OR5xNqPX7zxQhvV3w5VIoLyVMaOqT87YYUKofqCMvBhrbSzwF7K/1irqgn7
-# L8HhK2k7WvZJdwVpt42LTzZedgmM7XUKyUrOe0pufXnHnGnp7/CBpLNQT4DxUAyi
-# /r42gWG6Eo+1LjrANqVDVb6fQyKjOoFK/jNZuw==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgB85sStaAdF8cnsHzIClwDgKYzpA
+# 970APD0xqjDNyurioAZYs+O6/ASrsjxsxbG3XGk2FltfJCqpC6JCSClstZSqgYYU
+# 8B4Cn2zOpaeW7wXB/FIma6QmsWLZhEwTecAEoSI6snhWYxYVEBqhhBcP3O1tVn6w
+# xNwF0YbrX/BYB6egRVjDG+wJLI+kUzAwO0i13sERvwmLtldn+1GX2ayrThpkSBnR
+# /X828jyrj64KveyT3iKCbA3mVrStYpzOtbZka3BKaABrFzpPSxqxQotllu3aSy2A
+# gabIQbQ6PknEmWBAyf7mwgr1GXP86FB8bR0lHYdCSeCI/mun9h7U/TRZCSDQSA9p
+# vdZCInNF79TWaH/QZf/A5w1u/OjsTf2n00Fn2RTh9IelwbiUAkeTAzajwn+iyB5j
+# ku6eIgMFE2RDv0z/w4QbjL0J4cx+sBjum7feDggkEb0s8zXxQ/jWcNatdtyAYe62
+# SoB0WuVb6eTFHJpFn1IVKpzGVo/efgK6y9ihaw==
 # SIG # End signature block
