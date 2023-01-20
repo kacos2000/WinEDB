@@ -1,10 +1,16 @@
 <#
 	.SYNOPSIS
 		Extracts table data from Windows EDB databases
+		Any processing is done one a COPY of the original EDB file!
 	
 	.DESCRIPTION
-		Extracts the table data & Table info  from Windows EDB databases,
-		provided they were Shutdown properly, or repaired with Esentutl.exe.
+		Extracts the Table data & Table info from Windows EDB databases.
+
+		If the EDB can not be attached for any reason (eg EDB is corrupted),
+		esentutl will be run in the background against the COPY of the database eg:
+		- Repair:      esentutl.exe /p e:\Temp\l5y55mv5.fyu /o
+		- Defragment:  esentutl.exe /d e:\Temp\l5y55mv5.fyu /o
+		and processing will resume if the dB was repaired successfully.
 		If not, the script will stop & inform you (hopefully).
 		
 		The 3 embedded Microsoft DLLs (Assemblies) are:
@@ -12,34 +18,45 @@
 		Esent.Collections.dll (MD5: EC0A87B1C0A5A52FB1FE5A0784109BAC)
 		Esent.Interop.dll     (MD5: CDD4CEA8F17BF303B31A655866D49151)
 		sourced from: https://github.com/microsoft/ManagedEsent
-			
-	.PARAMETER Input
-		The full path of the EDB database including the Filename
+	
+	.PARAMETER InputFile
+		Full Path of Database File
 	
 	.PARAMETER OutputFolder
 		The Full Path of the Folder to save the extracted data.
 		Default is User's Desktop (a subfolder is created for each processed dB)
 	
-	.PARAMETER AllTables
-		A description of the AllTables parameter.
+	.PARAMETER Input
+		The full path of the EDB database including the Filename
 	
+	.EXAMPLE
+		PS> .\WindowsEDB-to-CSV -InputFile c:\test\windows.edb -OutputFolder c:\user\username\desktop
+
 	.NOTES
 		===========================================================================
 		Created by:   	Costas Katsavounidis MA, MSc, CFCE, CAWFE
-						https://github.com/kacos2000/WinEDB
+		https://github.com/kacos2000/WinEDB
 		Filename:       WindowsEDB-to-CSV.ps1
 		===========================================================================
+
+	.LINK
+		https://github.com/kacos2000/WinEDB
+		https://github.com/microsoft/ManagedEsent/blob/master/Documentation/ManagedEsentDocumentation.md
+		https://github.com/microsoft/ManagedEsent
 #>
 [CmdletBinding()]
 param
 (
-	[Parameter(ValueFromPipeline = $true,
+	[Parameter(Mandatory = $false,
+			   ValueFromPipeline = $true,
 			   HelpMessage = 'Full Path of Database File')]
-	$InputFile,
-	[Parameter(ValueFromPipeline = $true,
-			   HelpMessage = 'The Full Path a Directory to Export the CSVs')]
-	$OutputFolder = [Environment]::GetFolderPath('Desktop')
+	[System.String]$InputFile,
+	[Parameter(Mandatory = $false,
+			   ValueFromPipeline = $false,
+			   HelpMessage = 'The Full Path of the Directory to Export the CSVs')]
+	[System.String]$OutputFolder = [Environment]::GetFolderPath('Desktop')
 )
+
 
 
 if ([System.String]::IsNullOrEmpty($InputFile))
@@ -85,6 +102,8 @@ function Copy-DB
 	
 	# Get a random Filename
 	$outfile = "$($env:TEMP)\$([IO.Path]::GetRandomFileName())"
+	
+	
 	
 	# copy/overwrite db to system temp just in case
 	Write-Host "Copying $($InputFile)" -f Yellow
@@ -499,36 +518,61 @@ function Read-EDB
 	}
 	catch [System.Management.Automation.MethodException]
 	{
-		Write-Output "Will attempt to recover from: $(($Error[0].Exception.InnerException | Out-String))"
-		$null = [Microsoft.Isam.Esent.Interop.Api]::JetTerm2($Instance, [Microsoft.Isam.Esent.Interop.TermGrbit]::None)
+		Write-Output "$($Error[0].Exception.InnerException | Out-String) - [1] Will attempt to repair with Esentutl"
+		[Microsoft.Isam.Esent.Interop.Api]::JetTerm2($Instance, [Microsoft.Isam.Esent.Interop.TermGrbit]::Complete)
 		try
 		{
-			# New Recovery Instance
-			$RecoveryInstance = [Microsoft.Isam.Esent.Interop.JET_INSTANCE]::Nil
-			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($RecoveryInstance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::Recovery, [int]$true, $null)
+			# (should be run on the original EDB at its default location in '/ProgramData/..)
+			# $ese_rerecover = "esentutl.exe /r " + "$($dbfile)" + " /o"
+			
+			# Commands
+			$ese_repair = "esentutl.exe /p " + "$($dbfile)" + " /o"
+			$ese_defrag = "esentutl.exe /d " + "$($dbfile)" + " /o"
+			
+			# repair
+			Write-Output "[1] Attempting repair with Esentutl /p"
+			invoke-expression -Command $ese_repair  | Out-File -FilePath "$($outfolder)\Esent repair log.txt" -Encoding utf8 
+			# defragment
+			Write-Output "[1] Attempting defragmentation of the dB with Esentutl /d"
+			invoke-expression -Command $ese_defrag  | Out-File -FilePath "$($outfolder)\Esent repair log.txt" -Encoding utf8 -Append
+						
 			# New Session
-			$RecoverySession = [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil
+			$Session = [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil
+			$syspath = "$($env:TEMP)\$([IO.Path]::GetRandomFileName())"
+			$logpath = "$($env:TEMP)\$([IO.Path]::GetRandomFileName())"
+			# Set Instance Parameters
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::DatabasePageSize, $PageSize, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::Recovery, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::EnableIndexChecking, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::EnableIndexCleanup, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::EnableOnlineDefrag, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::CreatePathIfNotExist, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::EventSourceKey, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::DisablePerfmon, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::CircularLog, [int]$true, $null)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::SystemPath, 0, $syspath)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::LogFilePath, 0, $logpath)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetSetSystemParameter($Instance, [Microsoft.Isam.Esent.Interop.JET_SESID]::Nil, [Microsoft.Isam.Esent.Interop.JET_param]::OutstandingIOMax, [int]32768, $null)
 			# Create Instance
-			$null = [Microsoft.Isam.Esent.Interop.Api]::JetCreateInstance2([ref]$RecoveryInstance, 'WinEDB-Recovery', 'WinEDB-Recovery', [Microsoft.Isam.Esent.Interop.CreateInstanceGrbit]::None)
+			[Microsoft.Isam.Esent.Interop.Api]::JetCreateInstance2([ref]$Instance, 'WinEDB[1]', 'WinEDB[1]', [Microsoft.Isam.Esent.Interop.CreateInstanceGrbit]::None)
 			# Init Instance
-			$null = [Microsoft.Isam.Esent.Interop.Api]::JetInit2([ref]$RecoveryInstance, [Microsoft.Isam.Esent.Interop.InitGrbit]::None)
+			$null = [Microsoft.Isam.Esent.Interop.Api]::JetInit2([ref]$Instance, [Microsoft.Isam.Esent.Interop.InitGrbit]::None)
 			# Begin Session
-			[Microsoft.Isam.Esent.Interop.Api]::JetBeginSession($RecoveryInstance, [ref]$RecoverySession, [System.String]::Empty, [System.String]::Empty)
+			[Microsoft.Isam.Esent.Interop.Api]::JetBeginSession($Instance, [ref]$Session, [System.String]::Empty, [System.String]::Empty)
 			# Re-Attach dB
-			$null = [Microsoft.Isam.Esent.Interop.Api]::JetAttachDatabase($RecoverySession, $dbfile, [Microsoft.Isam.Esent.Interop.AttachDatabaseGrbit]::DeleteCorruptIndexes)
+			Write-Output "Re-Attaching dB"
+			[Microsoft.Isam.Esent.Interop.Api]::JetAttachDatabase($Session, $dbfile, [Microsoft.Isam.Esent.Interop.AttachDatabaseGrbit]::None)
 		}
 		catch
 		{
 			$stopWatch.Stop()
 			$stopWatch.Reset()
-			Write-Output $null
-			Write-Output "Could not Attach the temp copy of $($SourcedbFile):`n $(($Error[0].Exception.InnerException | Out-String))`nTry repairing it with 'esentutl.exe'"
-			[Microsoft.Isam.Esent.Interop.Api]::JetEndSession($RecoverySession, [Microsoft.Isam.Esent.Interop.EndSessionGrbit]::None)
-			[Microsoft.Isam.Esent.Interop.Api]::JetTerm2($RecoveryInstance, [Microsoft.Isam.Esent.Interop.TermGrbit]::None)
+			Write-Output "[2] Could not attach the temp copy of $($SourcedbFile):`n $(($Error[0].Exception.InnerException | Out-String))`nTry repairing it with 'esentutl.exe'"
+			[Microsoft.Isam.Esent.Interop.Api]::JetEndSession($Session, [Microsoft.Isam.Esent.Interop.EndSessionGrbit]::None)
+			[Microsoft.Isam.Esent.Interop.Api]::JetTerm2($Instance, [Microsoft.Isam.Esent.Interop.TermGrbit]::None)
 			# Delete temp copy of the dB
 			[System.IO.File]::Delete($dbfile)
-			Stop-Transcript
-			Exit
+			return
 		}
 	}
 	catch
@@ -1011,19 +1055,20 @@ function Read-EDB
 	$stopWatch.Reset()
 } # End Function Read-EDB
 
+
 <#
 	.SYNOPSIS
 		Loads the 3 Microsoft Managed Interop DLLs
 	
 	.DESCRIPTION
-		# Source  = https://github.com/microsoft/ManagedEsent
-		# Release = 2.0.2
+		Source  = https://github.com/microsoft/ManagedEsent
+		Release = 2.0.2
 	
 	.EXAMPLE
-				PS C:\> Load-ManagedInterop
+		PS C:\> Load-ManagedInterop
 	
-	.NOTES
-		Additional information about the function.
+	.LINK
+		https://github.com/microsoft/ManagedEsent
 #>
 function Load-ManagedInterop
 {
@@ -1938,8 +1983,8 @@ exit
 # SIG # Begin signature block
 # MIIviAYJKoZIhvcNAQcCoIIveTCCL3UCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA2GsbyuqQu2TQj
-# F6YKblDa+wOqlOqqP+IVUfUtWFrJOKCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDNuyk5euJuWr9d
+# +9WMva4MAf9PdbTK0ZyYFCdUOH+1XaCCKI0wggQyMIIDGqADAgECAgEBMA0GCSqG
 # SIb3DQEBBQUAMHsxCzAJBgNVBAYTAkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNo
 # ZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNVBAoMEUNvbW9kbyBDQSBMaW1p
 # dGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMwHhcNMDQwMTAx
@@ -2159,35 +2204,35 @@ exit
 # AQEwaDBUMQswCQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMSsw
 # KQYDVQQDEyJTZWN0aWdvIFB1YmxpYyBDb2RlIFNpZ25pbmcgQ0EgUjM2AhALYufv
 # MdbwtA/sWXrOPd+kMA0GCWCGSAFlAwQCAQUAoEwwGQYJKoZIhvcNAQkDMQwGCisG
-# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIAoYJIA2kSBIAxBeunxeySm2JIAAfGLE
-# nkrO8VVP5aaBMA0GCSqGSIb3DQEBAQUABIICAD8RxAw5sEmLVxAi8Yh/37fexYm0
-# gK8UtmPbEkZQIn28AwpAvW/4r/1nPXRXjvMcR+x0Wa8bqX2BcQ1W4GW/Xo30aJVZ
-# u3qXS2NMVh4G30hzVaekxnbNmzKZi4I4wjKdeM5JITiBuhKLPJ31FXlCaH493vvd
-# zJr819Ux+vN50R6klb2ohka7II0zavvyLp3CEvRrSXsoS/3kreNGrrBADVM+DuiP
-# i6+WyoxrZGlyVy2/lCg9sNFl/FYd4jpt9stmRnJJvrzrWBi2SBmviSs+LOIDk+4W
-# aMYaMBBKaDbKO/SkfIYwbtWnIf93tTkYeivqBEI1X4qjg3iEJeK7Y+yCgu1wzAs5
-# xeZPFYS4elLFNoJR75v7NGe36axVbgAD+/nn+0Zs9JfJeekOnhk9rhmT1DuwglY1
-# Pn5LR7m2KAB59TgGLVLvPqkJtg+8RM0rrbLbfR6fGXvI7cRiZ39852crVlkYZRLP
-# wpwv9UgLw6pBrP0jItLsMJViAqCumYpORnz5nxAW0Mq+mx6GHLfdxOKfqWWPn9Lz
-# yREEkTlpZ3j/RDE+fMqu0qpv4uiafHOelcXaq8RdgzVk97+Qi392EMAdNjKoFKFr
-# /v+mRWXhqzw6ZZl3VJZ/4KzbARBjkMSeIWykm8yyrS1mHt4/LkXScoypVmHFURTh
-# za/mHX2OfOQMCnaqoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
+# AQQBgjcCAQQwLwYJKoZIhvcNAQkEMSIEIPlT1tG+M1svTGL6PjzfTHHUsmSZExf2
+# pMWgP3wNY6YxMA0GCSqGSIb3DQEBAQUABIICAE6wdt65tEHSmNsPyCVP9UFiVJx3
+# NRyzFAw3Hyi4YfwO+owLXTlcU+kCVZ01sga5HOt86JQRbQORdEyK50dvuoihKZKL
+# xiXvjPhLX1W12jJWxqqnltENp0oOogW+aiMUZwtBu0qkphSdWAWqO6LydD3IqT05
+# 487NcE9n00OVOoqGP95JEIuyGHeXxCDlgxlYmMCbNNeEa44kXFoebeOfxImCKL90
+# jS77/p634i/UEMwkvhtrOcWxCQ7FlWt3IbhAg7/Nq87TAvSPDyRTkslXOzm8kT6c
+# qTLgNEEB9s+BrdiY1Z6JjIl/vDX2DL7Uy59kX5ZvhUD2kFIV5hvXjGthYbqxSrYk
+# VdFwnM5KWgA3oVit1HQ4mxjaV6bu0QOc51oVq2TrTxmhVQ/2trEgj4rJnRRURwRk
+# plmEi3lwVo7CxQQS/5ZwgEayQS6LO3GvP50D7ZOYCA2mSv+afx5xBd/Dgu6gvYYX
+# ZXOPGNlDFEqQq2zalisi7yz0yJ6N5DgBVRxLaEy11/K+NC9+HbSWrEoVmjmywrda
+# tUYjd+uBSILvtuRFQkaO+MCEk1l/cdtJZ2ju+6aF1rjHVC8ZJtYKWqrkkZnFirua
+# bNYK57ZMv2TmDUMRo1TjmHIr7IYvv3ciDYcWfxu7BBGmIM0mIt7E0xgb1lANt1RC
+# OZHsfZh7hoJQ9oUhoYIDbDCCA2gGCSqGSIb3DQEJBjGCA1kwggNVAgEBMG8wWzEL
 # MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExMTAvBgNVBAMT
 # KEdsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gU0hBMzg0IC0gRzQCEAFIkD3C
 # irynoRlNDBxXuCkwCwYJYIZIAWUDBAIBoIIBPTAYBgkqhkiG9w0BCQMxCwYJKoZI
-# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMTgyMzI5MTFaMCsGCSqGSIb3DQEJ
+# hvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzAxMjAxNjUwMDNaMCsGCSqGSIb3DQEJ
 # NDEeMBwwCwYJYIZIAWUDBAIBoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEi
-# BCAluWO59M6K2zCr7T4sBEfNERMw3DrWvzna3/i04Q7ZIDCBpAYLKoZIhvcNAQkQ
+# BCAeQ/ZAgnNXB72tdJqpd96lubfugRseg2ImgD4HZIp/pDCBpAYLKoZIhvcNAQkQ
 # AgwxgZQwgZEwgY4wgYsEFDEDDhdqpFkuqyyLregymfy1WF3PMHMwX6RdMFsxCzAJ
 # BgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
 # bG9iYWxTaWduIFRpbWVzdGFtcGluZyBDQSAtIFNIQTM4NCAtIEc0AhABSJA9woq8
-# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgB85sStaAdF8cnsHzIClwDgKYzpA
-# 970APD0xqjDNyurioAZYs+O6/ASrsjxsxbG3XGk2FltfJCqpC6JCSClstZSqgYYU
-# 8B4Cn2zOpaeW7wXB/FIma6QmsWLZhEwTecAEoSI6snhWYxYVEBqhhBcP3O1tVn6w
-# xNwF0YbrX/BYB6egRVjDG+wJLI+kUzAwO0i13sERvwmLtldn+1GX2ayrThpkSBnR
-# /X828jyrj64KveyT3iKCbA3mVrStYpzOtbZka3BKaABrFzpPSxqxQotllu3aSy2A
-# gabIQbQ6PknEmWBAyf7mwgr1GXP86FB8bR0lHYdCSeCI/mun9h7U/TRZCSDQSA9p
-# vdZCInNF79TWaH/QZf/A5w1u/OjsTf2n00Fn2RTh9IelwbiUAkeTAzajwn+iyB5j
-# ku6eIgMFE2RDv0z/w4QbjL0J4cx+sBjum7feDggkEb0s8zXxQ/jWcNatdtyAYe62
-# SoB0WuVb6eTFHJpFn1IVKpzGVo/efgK6y9ihaw==
+# p6EZTQwcV7gpMA0GCSqGSIb3DQEBCwUABIIBgAHerR4Ydn9ckQXPwTiPqCTIr3pG
+# lVHCnUZABivtGUk/QGjt1Sb919oCIfZRzBZY3h6XanIDaG+lg8tE2WK9dIHZCwjh
+# 3UNlWnMT37QiqhSq62KWtik+iwxwftcKFsxSJswqmNm8T8EhHg8vtRGcV943kuht
+# ME1buewxgUJtexYD61Op4uVbXACrnUiJgzCs6OyAiJnbhY8VpJfkA8JmhpuIgttm
+# gxismwopyMJCes9BCdXU3N6A1wMPOMca9uc3yaMK0ApMtUz4RX6C7+sD1vseRASc
+# YiNFwLYSNe20of9HnNVnpkQ52DTpOYR+1h29Bgc+rc2FX3jGKjZIq/dZDXE+EXEl
+# VMvPiTMy86TbX7tli/IhXNL/gDOaNR9i6subL5rscDZIO+9s6vo2WJDOrOAuwzJ8
+# eZK8Q6oFM4VeHAsTRRjp9FvRazNFnZsl/kmmsTYDQsf4TOsiIhSiWlrvdWMRctSs
+# A+lTiMNWCX+TdJSo5aAqDpTl8zERHX/T6dLU2w==
 # SIG # End signature block
