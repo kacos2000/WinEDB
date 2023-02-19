@@ -24,7 +24,7 @@ _______________
 
 _______________
 
-**[Note]**<br>
+### [Note]<br>
 As of Windows 11 22H2,  Windows Search data is stored in multipe SQLite3 dBs<br>
 found at 'C:\ProgramData\Microsoft\Search\Data\Applications\Windows'*<br>
 Below are some initial Queries:
