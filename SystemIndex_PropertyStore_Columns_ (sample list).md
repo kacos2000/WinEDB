@@ -2,7 +2,7 @@ This is a sample list of 602 'SystemIndex_PropertyStore' table columns from a fu
 These are not fixed in either their numbering or the completeness, and depend on what is indexed by the Search Engine in each specific system.
 For comparison, on the right are some of the Columns used for JPEG Image files *(the rest of the columns are empty)*.
 
-  | Column Name *full list)* |Column Name *(jpeg image files)* |
+  | Column Name *(full list)* |Column Name *(jpeg image files)* |
   | :-----------|:---------------|
 | WorkID *(Index)*| 	 WorkID |
   | 0F-InvertedOnlyMD5 |	 0F-InvertedOnlyMD5 |
