@@ -4,8 +4,8 @@ from a fully populated Windows **11 22R2** system.
 These are not fixed in the completeness, and depend on what is indexed by the Search Engine 
 in each specific system. 
 
-| Name |
-| ---- |
+| Column Name *(full list)* |
+| :---- |
 | System.Null |
 | System.Photo.GainControlText |
 | System.Contact.BusinessHomePage |
